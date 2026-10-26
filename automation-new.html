@@ -6,7 +6,7 @@
 <title>Automations · New</title>
 <meta name="shopify-api-key" content="prototype">
 <script src="https://cdn.shopify.com/shopifycloud/polaris-2.0-rc.js"></script>
-<link rel="stylesheet" href="shared/cifra.css">
+<link rel="stylesheet" href="shared/cifra.css?v=5">
 <script src="shared/cifra.js" defer></script>
 </head>
 <body>
@@ -74,14 +74,15 @@
         </s-section>
 
         <s-section heading="Preview">
-          <!-- Preview al estilo Shopify: una sola card con aspecto de correo, cifra principal + listas escaneables. Todo nativo. -->
+          <!-- Preview al estilo Shopify: una sola card con aspecto de correo, cifra principal + listas escaneables.
+               Custom solo .c-digestcard (radio 16px + sombra mínima) y el logo. -->
           <s-stack gap="base">
             <s-paragraph color="subdued">This is what lands in your inbox. Numbers below are from last week.</s-paragraph>
-            <s-box border="base" borderRadius="large" padding="base">
+            <div class="c-digestcard" data-custom="DigestCard">
               <s-stack gap="base">
                 <s-stack direction="inline" gap="small" alignItems="center" justifyContent="space-between">
                   <s-stack direction="inline" gap="small" alignItems="center">
-                    <s-thumbnail src="assets/img/cifra-app-icon.svg" alt="Cifra" size="small"></s-thumbnail>
+                    <img class="c-digestcard__logo" src="assets/img/cifra-logo-blue.svg" alt="Cifra" width="40" height="40">
                     <s-stack gap="small-500">
                       <s-text type="strong">Your week in profit · Oct 19 – 25</s-text>
                       <s-text color="subdued">Cifra · to jesus@getcifra.com</s-text>
@@ -123,7 +124,7 @@
                 </s-stack>
                 <s-stack direction="inline"><s-button icon="chat">Ask Cifra about this</s-button></s-stack>
               </s-stack>
-            </s-box>
+            </div>
           </s-stack>
         </s-section>
       </s-stack>

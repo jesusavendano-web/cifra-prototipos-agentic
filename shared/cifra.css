@@ -1318,3 +1318,7 @@ body.has-admin .c-admin.is-collapsed ~ ::after { left: 4px; }
 .c-pvchat__send { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #f1f1f1; }
 /* Briefing del Home: ancho base; cada ilustración se ajusta inline para que el dibujo visible mida ~140px (los webp traen márgenes distintos) */
 .c-homecard .c-homecard__img--brief { width: 140px; right: 14px; bottom: 14px; }
+
+/* Automations · digest: la vista previa del correo con radio 16px y una sombra mínima */
+.c-digestcard { padding: 16px; border: 1px solid var(--c-border); border-radius: 16px; background: var(--c-surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 2px 8px rgba(0, 0, 0, .04); }
+.c-digestcard__logo { display: block; width: 40px; height: 40px; flex: none; }
