@@ -66,14 +66,14 @@
     shell.className = 'c-admin';
     shell.innerHTML = `
       <aside class="c-admin__nav" aria-label="Shopify admin">
-        <div class="c-admin__brand"><img src="assets/logos/shopify-mark.svg" alt="Shopify"><button type="button" class="c-admin__toggle" aria-label="Collapse sidebar"><s-icon type="layout-sidebar-left"></s-icon></button></div>
+        <div class="c-admin__brand"><img src="assets/logos/shopify-admin.svg" alt="Shopify" width="21" height="24"><button type="button" class="c-admin__toggle" aria-label="Collapse sidebar"><s-icon type="layout-sidebar-left"></s-icon></button></div>
         <div class="c-admin__search"><s-icon type="search"></s-icon><span>Search</span><kbd>Ctrl K</kbd></div>
         <div class="c-admin__scroll">
           ${ADMIN_NAV.map(([i, l, n]) => row(i, l, n ? `<b class="c-admin__count">${n}</b>` : '')).join('')}
           <span class="c-admin__group">Sales channels <s-icon type="chevron-right" size="small"></s-icon></span>
           ${row('store', 'Online Store')}${row('magic', 'Agentic')}
           <span class="c-admin__group">Apps <s-icon type="chevron-right" size="small"></s-icon></span>
-          <a class="c-admin__item c-admin__app${active === 'home' ? ' is-current' : ''}" href="home.html"><img src="assets/img/cifra-icon-blue.svg" alt=""><span>Cifra Analytics</span><s-icon type="pin" size="small"></s-icon></a>
+          <a class="c-admin__item c-admin__app${active === 'home' ? ' is-current' : ''}" href="home.html"><img src="assets/img/cifra-app-icon-mono.svg" alt=""><span>Cifra Analytics</span></a>
           ${APP_NAV.map(([k, h, l]) => `<a class="c-admin__sub${k === active ? ' is-current' : ''}" href="${h}"${k === active ? ' aria-current="page"' : ''}>${l}</a>`).join('')}
         </div>
         <div class="c-admin__foot">
@@ -84,7 +84,7 @@
       <div class="c-admin__main">
         <header class="c-admin__titlebar">
           ${title ? `<a class="c-admin__back" href="${backHref}" aria-label="Back"><s-icon type="chevron-left"></s-icon></a>` : ''}
-          <img src="assets/img/cifra-icon-blue.svg" alt="" width="20" height="20">
+          <img class="c-admin__appicon" src="assets/img/cifra-app-icon.svg" alt="" width="20" height="20">
           ${title ? `<span class="c-admin__slash">/</span><strong>${title}</strong>` : '<strong>Cifra Analytics</strong>'}
           <span class="c-admin__actions"></span>
           <span class="c-admin__more" aria-hidden="true"><i></i><i></i><i></i></span>
