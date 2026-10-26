@@ -16,7 +16,7 @@
   Pasos (hash):  #store-preferences (1/4) · #data-sources (2/4) · #congratulations
   Panel izquierdo = formulario del paso + widget de sync; panel derecho = vista previa del dashboard que se arma.
   Nativo → s-select, s-badge, s-button, s-spinner, s-heading, s-paragraph, s-icon
-  Custom → layout dividido, chips de rol (selección única), filas de fuentes de datos, widget de sync,
+  Custom → ChatPreview (chat animado del paso 1 y 2), layout dividido, chips de rol (selección única), filas de fuentes de datos, widget de sync,
            preview del dashboard (mini KPI cards, lista, estados "sin conectar") y card de Congrats.
 -->
 <div class="c-ob" id="ob" data-step="store-preferences">
@@ -96,150 +96,17 @@
       </header>
 
       <!-- Preview paso 1 -->
-      <div class="c-pv__body" data-for="store-preferences">
-        <h2 class="c-pv__title">Good evening. Here's what your dashboard will look like.</h2>
-        <div class="c-pv__filters" aria-hidden="true"><span class="c-pill"><s-icon type="calendar"></s-icon>Last 30 days</span><span class="c-pill"><s-icon type="calendar-compare"></s-icon>Previous period</span></div>
-        <div class="c-pv__grid">
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Cohorts &amp; LTV</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">$148.50</span> <span class="c-delta c-delta--up">↗ 18%</span></span>
-                <span data-spark="rand:31:20" data-prev="rand:32:20"></span>
-              </div>
-            </div>
-          </article>
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Contribution Margin</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">$42,800</span> <span class="c-delta c-delta--up">↗ 14%</span></span>
-                <span data-spark="rand:33:20" data-prev="rand:34:20"></span>
-              </div>
-            </div>
-          </article>
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Expenses by Category</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">$18,400</span> <span class="c-delta c-delta--down">↘ 5%</span></span>
-                <span data-spark="rand:35:20" data-prev="rand:36:20"></span>
-              </div>
-            </div>
-          </article>
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Marketing Efficiency</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">3.8x</span> <span class="c-delta c-delta--up">↗ 12%</span></span>
-                <span data-spark="rand:37:20" data-prev="rand:38:20"></span>
-              </div>
-            </div>
-          </article>
-        </div>
-        <article class="c-card c-pvw c-pvw--list" data-custom="TableWidget">
-          <div class="c-card__body">
-            <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Total Sales over Time</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-            <div class="c-indextable c-pvw__table"><div class="c-indextable__scroll"><table>
-              <thead><tr><th>Month</th><th class="c-num">Total sales</th><th class="c-num">Change</th></tr></thead>
-              <tbody>
-                <tr><td>Feb 1, 2025</td><td class="c-num"><b>$105,420</b></td><td class="c-num"><span class="c-delta c-delta--up">↗ 5%</span></td></tr>
-                <tr><td>Mar 1, 2025</td><td class="c-num"><b>$112,890</b></td><td class="c-num"><span class="c-delta c-delta--up">↗ 7%</span></td></tr>
-                <tr><td>Apr 1, 2025</td><td class="c-num"><b>$118,300</b></td><td class="c-num"><span class="c-delta c-delta--up">↗ 4%</span></td></tr>
-                <tr><td>May 1, 2025</td><td class="c-num"><b>$121,500</b></td><td class="c-num"><span class="c-delta c-delta--up">↗ 3%</span></td></tr>
-                <tr><td>Jun 1, 2025</td><td class="c-num"><b>$123,627</b></td><td class="c-num"><span class="c-delta c-delta--up">↗ 2%</span></td></tr>
-              </tbody>
-            </table></div></div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Preview paso 2 -->
-      <div class="c-pv__body" data-for="data-sources" hidden>
-        <h2 class="c-pv__title">Good evening. Here's what your dashboard will look like.</h2>
-        <div class="c-pv__filters" aria-hidden="true"><span class="c-pill"><s-icon type="calendar"></s-icon>Last 30 days</span><span class="c-pill"><s-icon type="calendar-compare"></s-icon>Previous period</span></div>
-        <p class="c-pv__label">Sales</p>
-        <div class="c-pv__grid">
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Total Sales</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">$142,380</span> <span class="c-delta c-delta--up">↗ 12%</span></span>
-                <span data-spark="rand:41:20" data-prev="rand:42:20"></span>
-              </div>
-            </div>
-          </article>
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">AOV</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">$86.40</span> <span class="c-delta c-delta--up">↗ 3%</span></span>
-                <span data-spark="rand:43:20" data-prev="rand:44:20"></span>
-              </div>
-            </div>
-          </article>
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Customers</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">1,648</span> <span class="c-delta c-delta--up">↗ 9%</span></span>
-                <span data-spark="rand:45:20" data-prev="rand:46:20"></span>
-              </div>
-            </div>
-          </article>
-          <article class="c-card c-pvw" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">LTV</h3><span class="c-source" data-source="shopify" role="img" aria-label="shopify" title="shopify"></span></div>
-              <div class="c-kpi__row">
-                <span class="c-pvw__figure"><span class="c-kpi__value">$214</span> <span class="c-delta c-delta--up">↗ 5%</span></span>
-                <span data-spark="rand:47:20" data-prev="rand:48:20"></span>
-              </div>
-            </div>
-          </article>
-        </div>
-        <p class="c-pv__label">Marketing</p>
-        <div class="c-pv__grid">
-          <article class="c-card c-pvw c-pvw--locked" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Marketing Efficiency</h3></div>
-              <div class="c-pvw__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span></div>
-              <div class="c-pvw__cta"><span class="c-sourcestack__chips"><span class="c-source" data-source="meta_ads" role="img" aria-label="meta_ads" title="meta_ads"></span><span class="c-source" data-source="google_ads" role="img" aria-label="google_ads" title="google_ads"></span></span><span>Connect Meta and Google Ads</span></div>
-            </div>
-          </article>
-          <article class="c-card c-pvw c-pvw--locked" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Google Ads ROAS</h3></div>
-              <div class="c-pvw__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span></div>
-              <div class="c-pvw__cta"><span class="c-sourcestack__chips"><span class="c-source" data-source="google_ads" role="img" aria-label="google_ads" title="google_ads"></span></span><span>Connect Google Ads</span></div>
-            </div>
-          </article>
-        </div>
-        <p class="c-pv__label">Email &amp; SMS</p>
-        <div class="c-pv__grid">
-          <article class="c-card c-pvw c-pvw--locked" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Klaviyo Campaigns</h3></div>
-              <div class="c-pvw__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span></div>
-              <div class="c-pvw__cta"><span class="c-sourcestack__chips"><span class="c-source" data-source="klaviyo" role="img" aria-label="klaviyo" title="klaviyo"></span></span><span>Connect Klaviyo</span></div>
-            </div>
-          </article>
-        </div>
-        <p class="c-pv__label">Analytics</p>
-        <div class="c-pv__grid">
-          <article class="c-card c-pvw c-pvw--locked" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">Sessions</h3></div>
-              <div class="c-pvw__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span></div>
-              <div class="c-pvw__cta"><span class="c-sourcestack__chips"><span class="c-source" data-source="google_analytics" role="img" aria-label="google_analytics" title="google_analytics"></span></span><span>Connect Google Analytics</span></div>
-            </div>
-          </article>
-          <article class="c-card c-pvw c-pvw--locked" data-custom="KpiCard">
-            <div class="c-card__body">
-              <div class="c-pvw__head"><span class="c-grip" aria-hidden="true"><svg width="10" height="14" viewBox="0 0 10 14"><g fill="currentColor"><circle cx="2" cy="2" r="1.3"/><circle cx="8" cy="2" r="1.3"/><circle cx="2" cy="7" r="1.3"/><circle cx="8" cy="7" r="1.3"/><circle cx="2" cy="12" r="1.3"/><circle cx="8" cy="12" r="1.3"/></g></svg></span><h3 class="c-card__title">GA4 Bounce Rate</h3></div>
-              <div class="c-pvw__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span></div>
-              <div class="c-pvw__cta"><span class="c-sourcestack__chips"><span class="c-source" data-source="google_analytics" role="img" aria-label="google_analytics" title="google_analytics"></span></span><span>Connect Google Analytics</span></div>
-            </div>
-          </article>
+      <!-- Preview agéntico: chat que se responde solo (mismo visual que "Ask Cifra" en getcifra.com).
+           Paso 1 muestra lo que Cifra puede responder con Shopify; paso 2, lo que desbloquea cada fuente. -->
+      <div class="c-pv__body">
+        <h2 class="c-pv__title" id="pv-title">Good evening. Ask Cifra anything about your store.</h2>
+        <div class="c-pvchat" data-custom="ChatPreview">
+          <header class="c-pvchat__head">
+            <span class="c-pvchat__q" id="pv-q">What was my net profit last month?</span><s-icon type="chevron-down" size="small"></s-icon>
+            <span class="c-pvchat__tools"><span class="c-pvchat__tag">Sample store</span><s-icon type="compose" size="small"></s-icon><s-icon type="x" size="small"></s-icon></span>
+          </header>
+          <div class="c-pvchat__body" id="pv-body" aria-live="polite"></div>
+          <div class="c-pvchat__composer"><span class="c-prompt__logo" aria-hidden="true">C</span><span>Ask about your profit, schedule a summary or set an alert</span><span class="c-pvchat__send"><s-icon type="arrow-up" size="small"></s-icon></span></div>
         </div>
       </div>
     </div>
@@ -268,6 +135,52 @@
 </div>
 
 <script>
+
+// Preview agéntico: el chat se pregunta y se responde solo, en bucle. Cada paso tiene su guion.
+const SRC = (k) => `<span class="c-source" data-source="${k}" role="img" aria-label="${k}"></span>`;
+const SCRIPTS = {
+  "store-preferences": [
+    { q: "What was my net profit last month and what drove it?",
+      a: "Last month, net profit was <b>$18,420.35</b> for Sep 1 – Sep 30, 2026. It was <b>12.4% higher</b> than the previous month, mostly because shipping costs fell.",
+      card: `<div class="c-pvchat__card"><div class="c-pvchat__cardhead">Net profit, last month</div><div class="c-pvchat__metric"><span><a>Net Profit</a><small>Sep 1 – Sep 30, 2026</small></span><b>$18,420.35 <span class="c-delta c-delta--up">↗ 12.4%</span></b></div><div class="c-pvchat__cardfoot"><span>From 3 sources</span><span class="c-sourcestack__chips">${SRC("shopify")}${SRC("meta_ads")}${SRC("google_ads")}</span></div></div>` },
+    { q: "Which products had the highest profit margin in the last 30 days?",
+      a: "Ranked by net margin after cost of goods, shipping, fees and ads:",
+      card: `<div class="c-pvchat__card"><table class="c-pvchat__table"><thead><tr><th>Product</th><th>Net profit</th><th>Margin</th></tr></thead><tbody><tr><td>Cifra Hero Cash Cow</td><td>$414.64</td><td>51.5%</td></tr><tr><td>Normal Batch</td><td>$202.02</td><td>49.9%</td></tr><tr><td>The Complete Snowboard</td><td>$2,104.00</td><td>44.5%</td></tr></tbody></table><div class="c-pvchat__cardfoot"><span>From 2 sources</span><span class="c-sourcestack__chips">${SRC("shopify")}${SRC("meta_ads")}</span></div></div>` },
+    { q: "Alert me when sales drop more than normal",
+      a: "I'll watch your hourly sales against the usual range for that weekday. Here is what I understood:",
+      card: `<div class="c-pvchat__card"><div class="c-pvchat__kv"><span>Metric</span><b>Net sales, per hour</b><span>Normal</span><b>Your last 8 weeks, same weekday and hour</b><span>Alert when</span><b>2 hours in a row below normal</b></div><div class="c-pvchat__cardfoot"><span>Would have triggered 2 times in the last 30 days</span><span class="c-pvchat__btn">Turn on alert</span></div></div>` },
+  ],
+  "data-sources": [
+    { q: "Which ad channel had the best ROAS last week?",
+      a: "I can't answer this yet: no ad channel is connected. Connect Meta, Google or TikTok Ads and I'll compare ROAS and profit per channel.",
+      card: `<div class="c-pvchat__card c-pvchat__card--locked"><div class="c-pvchat__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span><span class="c-skeleton"></span></div><div class="c-pvchat__cardfoot"><span class="c-sourcestack__chips">${SRC("meta_ads")}${SRC("google_ads")}${SRC("tiktok_ads")}</span><span>Connect an ad channel to unlock ROAS by channel</span></div></div>` },
+    { q: "Did my Klaviyo campaigns make profit this month?",
+      a: "I need your Klaviyo account to answer this. Once it's connected I'll show profit per campaign, not just revenue.",
+      card: `<div class="c-pvchat__card c-pvchat__card--locked"><div class="c-pvchat__ghost"><span class="c-skeleton"></span><span class="c-skeleton"></span><span class="c-skeleton"></span></div><div class="c-pvchat__cardfoot"><span class="c-sourcestack__chips">${SRC("klaviyo")}</span><span>Connect Klaviyo</span></div></div>` },
+  ],
+};
+let chatTimer = null, chatRun = 0;
+const wait = (ms, run) => new Promise((r, x) => { chatTimer = setTimeout(() => (run === chatRun ? r() : x()), ms); });
+async function playChat(step) {
+  const run = ++chatRun; clearTimeout(chatTimer);
+  const body = document.getElementById("pv-body"), q = document.getElementById("pv-q");
+  document.getElementById("pv-title").textContent = step === "data-sources" ? "Connect a source and Cifra can answer more." : "Good evening. Ask Cifra anything about your store.";
+  const list = SCRIPTS[step] || SCRIPTS["store-preferences"];
+  try {
+    for (let i = 0; ; i = (i + 1) % list.length) {
+      const it = list[i];
+      body.classList.remove("is-out"); body.innerHTML = ""; q.textContent = it.q;
+      const add = (html, cls) => { const d = document.createElement("div"); d.className = cls + " c-pvchat__in"; d.innerHTML = html; body.append(d); if (window.CifraAssets) CifraAssets.hydrate(d); return d; };
+      await wait(400, run); add(it.q, "c-pvchat__bubble");
+      await wait(700, run); const st = add('<s-spinner size="small"></s-spinner><span>Reading your orders and costs…</span>', "c-pvchat__steps");
+      await wait(1300, run); st.innerHTML = '<s-icon type="check-circle" size="small"></s-icon><span>2 steps completed</span><s-icon type="chevron-down" size="small"></s-icon>';
+      await wait(300, run); add(it.a, "c-pvchat__answer");
+      await wait(500, run); add(it.card, "c-pvchat__cardwrap");
+      await wait(4200, run); body.classList.add("is-out");
+      await wait(450, run);
+    }
+  } catch (e) { /* otro paso tomó el control */ }
+}
 document.addEventListener("DOMContentLoaded", () => {
   const STEPS = ["store-preferences", "data-sources", "congratulations"];
   const ob = document.getElementById("ob");
@@ -282,6 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("ob-back").style.display = step === STEPS[0] ? "none" : "";
     if (location.hash.slice(1) !== step) history.replaceState(null, "", "#" + step);
     window.scrollTo(0, 0);
+    if (!done) playChat(step);
   };
   $("ob-next").addEventListener("click", () => go(STEPS[STEPS.indexOf(ob.dataset.step) + 1]));
   $("ob-back").addEventListener("click", () => go(STEPS[STEPS.indexOf(ob.dataset.step) - 1]));

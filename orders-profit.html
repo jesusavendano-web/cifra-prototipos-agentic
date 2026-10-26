@@ -15,63 +15,93 @@
   Pantalla: Profit per order (/app/orders) — NUEVA (ENG-2418)
   Pedido del weekly: "visualizar mejor el profit que tenemos por orden" y que la IA lo pueda representar.
   Es la misma data que el agente usa en el chat (turno 3 de chat.html); aquí se puede revisar orden por orden.
-  Cada orden desglosa: productos (COGS), envío, comisión de pago, descuentos y ad spend atribuido.
-  Nativo → s-page, s-section, s-grid, s-table, s-badge, s-link, s-button, s-select, s-banner, s-text, s-heading
-  Custom → KPI cards, gráfica de barras con negativos (SVG)
+  Tabla con el patrón de Reports/Dashboard (IndexTable custom: tabs, búsqueda, orden, pie con paginación).
+  Gráfica de barras al estilo Polaris Viz de Shopify Analytics.
+  Nativo → s-page, s-badge, s-button, s-banner, s-popover, s-choice-list, s-icon
+  Custom → filtros (c-pill), KPI cards, BarChart (SVG), IndexTable
 -->
 <s-page heading="Profit per order" inlineSize="large">
   <s-link slot="breadcrumb-actions" href="home.html">Home</s-link>
   <s-button slot="primary-action" variant="primary" icon="chat" href="chat.html">Ask Cifra about these orders</s-button>
   <s-button slot="secondary-actions" icon="export">Export</s-button>
 
-  <s-stack gap="base">
-    <s-grid gridTemplateColumns="200px 220px" gap="small-200">
-      <s-select label="Date range" labelAccessibilityVisibility="exclusive">
-        <s-option value="14" selected>Last 14 orders</s-option>
-        <s-option value="7d">Last 7 days</s-option>
-        <s-option value="30d">Last 30 days</s-option>
-      </s-select>
-      <s-select label="Show" labelAccessibilityVisibility="exclusive">
-        <s-option value="all" selected>All orders</s-option>
-        <s-option value="loss">Orders that lost money</s-option>
-      </s-select>
-    </s-grid>
+  <div class="c-stack">
+    <div class="c-filterbar" data-custom="FilterBar">
+      <span class="c-pill"><s-icon type="calendar"></s-icon>Oct 19 – Oct 25, 2026</span>
+      <span class="c-pill"><s-icon type="calendar-compare"></s-icon>Previous period</span>
+      <span class="c-filterbar__meta">Last data synced 8 min ago</span>
+    </div>
 
-    <s-grid gridTemplateColumns="1fr 1fr 1fr" gap="base">
-      <article class="c-card" data-custom="KpiCard"><div class="c-card__body"><h3 class="c-card__title">Net profit</h3><div class="c-kpi__row"><span><span class="c-kpi__value">$1,182.00</span> <span class="c-delta c-delta--up">↗ 9.4%</span></span></div></div></article>
-      <article class="c-card" data-custom="KpiCard"><div class="c-card__body"><h3 class="c-card__title">Average profit per order</h3><div class="c-kpi__row"><span><span class="c-kpi__value">$84.43</span> <span class="c-delta c-delta--down">↘ 3.1%</span></span></div></div></article>
-      <article class="c-card" data-custom="KpiCard"><div class="c-card__body"><h3 class="c-card__title">Orders that lost money</h3><div class="c-kpi__row"><span><span class="c-kpi__value">2 of 14</span> <span class="c-delta c-delta--flat">-$99.00</span></span></div></div></article>
-    </s-grid>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+      <article class="c-card" data-custom="KpiCard">
+        <div class="c-card__body">
+          <h3 class="c-card__title">Net profit</h3>
+          <div class="c-kpi__row"><span><span class="c-kpi__value">$1,182.00</span> <span class="c-delta c-delta--up">↗ 9.4%</span></span><span data-spark="rand:61:14:80:30" data-prev="rand:62:14:70:30"></span></div>
+        </div>
+      </article>
+      <article class="c-card" data-custom="KpiCard">
+        <div class="c-card__body">
+          <h3 class="c-card__title">Average profit per order</h3>
+          <div class="c-kpi__row"><span><span class="c-kpi__value">$84.43</span> <span class="c-delta c-delta--down">↘ 3.1%</span></span><span data-spark="rand:63:14:80:30" data-prev="rand:64:14:85:30"></span></div>
+        </div>
+      </article>
+      <article class="c-card" data-custom="KpiCard">
+        <div class="c-card__body">
+          <h3 class="c-card__title">Orders that lost money</h3>
+          <div class="c-kpi__row"><span><span class="c-kpi__value">2</span> <span class="c-delta c-delta--flat">of 14 orders · -$99.00</span></span></div>
+        </div>
+      </article>
+    </div>
 
-    <article class="c-card" data-custom="Chart">
+    <article class="c-card" data-custom="BarChart">
       <div class="c-card__body">
         <h3 class="c-card__title">Net profit per order</h3>
-        <span data-bars='[["#1035",96],["#1036",132],["#1037",48],["#1038",110],["#1039",-38],["#1040",71],["#1041",158],["#1042",64],["#1043",122],["#1044",89],["#1045",101],["#1046",77],["#1047",-61],["#1048",213]]' data-prefix="$" data-title="Net profit per order"></span>
+        <div class="c-kpi__row" style="margin:6px 0 4px"><span class="c-kpi__value">$1,182.00</span></div>
+        <span data-bars='[["#1035",96],["#1036",132],["#1037",48],["#1038",110],["#1039",-38],["#1040",71],["#1041",158],["#1042",64],["#1043",122],["#1044",89],["#1045",101],["#1046",77],["#1047",-61],["#1048",213]]' data-prefix="$" data-title="Net profit" data-legend="Oct 19 – Oct 25, 2026"></span>
       </div>
+      <footer class="c-card__footer c-card__footer--source"><span class="c-card__sources">From 2 sources</span><span class="c-sourcestack__chips"><span class="c-source" data-source="shopify" role="img" aria-label="Shopify"></span><span class="c-source" data-source="meta_ads" role="img" aria-label="Meta Ads"></span></span></footer>
     </article>
 
     <s-banner tone="info">
-      <s-paragraph>Ad spend is attributed to each order from Meta (last click, 7 days). Connect TikTok Ads so its spend is included too.</s-paragraph>
+      <s-paragraph>Ad spend is an estimate attributed to each order from Meta (last click, 7 days). Connect TikTok Ads so its spend is included too.</s-paragraph>
       <s-button slot="secondary-actions" href="integrations.html">Connect TikTok Ads</s-button>
     </s-banner>
 
-    <s-section padding="none">
-      <s-table>
-        <s-table-header-row>
-          <s-table-header listSlot="primary">Order</s-table-header>
-          <s-table-header>Date</s-table-header>
-          <s-table-header format="currency">Net sales</s-table-header>
-          <s-table-header format="currency">Cost of goods</s-table-header>
-          <s-table-header format="currency">Shipping</s-table-header>
-          <s-table-header format="currency">Fees</s-table-header>
-          <s-table-header format="currency">Ad spend</s-table-header>
-          <s-table-header format="currency">Net profit</s-table-header>
-          <s-table-header listSlot="secondary">Margin</s-table-header>
-        </s-table-header-row>
-        <s-table-body id="rows"></s-table-body>
-      </s-table>
-    </s-section>
-  </s-stack>
+    <div class="c-indextable" data-custom="IndexTable">
+      <div class="c-indextable__bar">
+        <div class="c-tabs" role="tablist" data-custom="Tabs">
+          <button class="c-tabs__tab" role="tab" aria-selected="true" data-filter="all">All orders</button>
+          <button class="c-tabs__tab" role="tab" aria-selected="false" data-filter="loss">Lost money</button>
+          <button class="c-tabs__tab" role="tab" aria-selected="false" data-filter="low">Low margin</button>
+        </div>
+        <div class="c-indextable__tools">
+          <s-button icon="search" accessibilityLabel="Search orders"></s-button>
+          <s-button icon="sort" accessibilityLabel="Sort" commandFor="ord-sort"></s-button>
+          <s-popover id="ord-sort"><s-box padding="small-200"><s-choice-list label="Sort by" name="sort"><s-choice value="date" selected>Date</s-choice><s-choice value="profit">Net profit</s-choice><s-choice value="margin">Margin</s-choice></s-choice-list></s-box></s-popover>
+        </div>
+      </div>
+      <div class="c-indextable__scroll">
+        <table>
+          <thead><tr>
+            <th><button type="button">Order</button></th>
+            <th><button type="button">Date <s-icon type="sort" size="small"></s-icon></button></th>
+            <th class="c-num">Net sales</th>
+            <th class="c-num">Cost of goods</th>
+            <th class="c-num">Shipping</th>
+            <th class="c-num">Fees</th>
+            <th class="c-num">Ad spend (est.)</th>
+            <th class="c-num"><button type="button">Net profit</button></th>
+            <th class="c-num">Margin</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="c-indextable__foot">
+        <span id="rows-count">Showing 14 of 14 orders</span>
+        <span class="c-row" style="gap:4px"><s-button icon="chevron-left" accessibilityLabel="Previous page" disabled></s-button><s-button icon="chevron-right" accessibilityLabel="Next page" disabled></s-button></span>
+      </div>
+    </div>
+  </div>
 </s-page>
 
 <script>
@@ -91,23 +121,28 @@ const ORDERS = [
   ["#1037", "Oct 20", 158, 72, 12, 5, 21],
   ["#1036", "Oct 19", 298, 118, 16, 9, 23],
   ["#1035", "Oct 19", 236, 98, 14, 7.2, 20.8],
-];
+].map(([id, date, sales, cogs, ship, fees, ads]) => {
+  const profit = sales - cogs - ship - fees - ads;
+  return { id, date, sales, cogs, ship, fees, ads, profit, margin: (profit / sales) * 100 };
+});
 const money = (v) => (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-document.getElementById("rows").innerHTML = ORDERS.map(([id, date, sales, cogs, ship, fees, ads]) => {
-  const profit = sales - cogs - ship - fees - ads, margin = (profit / sales) * 100;
-  const tone = profit < 0 ? "critical" : margin < 25 ? "warning" : "success";
-  return `<s-table-row>
-    <s-table-cell><s-link href="chat.html">${id}</s-link></s-table-cell>
-    <s-table-cell>${date}</s-table-cell>
-    <s-table-cell>${money(sales)}</s-table-cell>
-    <s-table-cell>${money(cogs)}</s-table-cell>
-    <s-table-cell>${money(ship)}</s-table-cell>
-    <s-table-cell>${money(fees)}</s-table-cell>
-    <s-table-cell>${money(ads)}</s-table-cell>
-    <s-table-cell><s-text type="strong" ${profit < 0 ? 'tone="critical"' : ""}>${money(profit)}</s-text></s-table-cell>
-    <s-table-cell><s-badge tone="${tone}">${margin.toFixed(1)}%</s-badge></s-table-cell>
-  </s-table-row>`;
-}).join("");
+const render = (filter) => {
+  const list = ORDERS.filter((o) => filter === "loss" ? o.profit < 0 : filter === "low" ? o.profit >= 0 && o.margin < 35 : true);
+  document.getElementById("rows").innerHTML = list.map((o) => `<tr>
+    <td class="c-strong"><a class="c-rowlink" href="chat.html">${o.id}</a></td>
+    <td>${o.date}</td>
+    <td class="c-num">${money(o.sales)}</td>
+    <td class="c-num">${money(o.cogs)}</td>
+    <td class="c-num">${money(o.ship)}</td>
+    <td class="c-num">${money(o.fees)}</td>
+    <td class="c-num">${money(o.ads)}</td>
+    <td class="c-num c-strong">${money(o.profit)}</td>
+    <td class="c-num">${o.profit < 0 ? `<s-badge tone="critical">${o.margin.toFixed(1)}%</s-badge>` : o.margin < 35 ? `<s-badge tone="warning">${o.margin.toFixed(1)}%</s-badge>` : o.margin.toFixed(1) + "%"}</td>
+  </tr>`).join("");
+  document.getElementById("rows-count").textContent = `Showing ${list.length} of ${ORDERS.length} orders`;
+};
+render("all");
+document.querySelectorAll("[data-filter]").forEach((t) => t.addEventListener("click", () => render(t.dataset.filter)));
 </script>
 
 </body>

@@ -89,7 +89,7 @@
           <span class="c-admin__actions"></span>
           <span class="c-admin__more" aria-hidden="true"><i></i><i></i><i></i></span>
         </header>
-        <div class="c-admin__frame"></div>
+        <div class="c-admin__frame"></div>
       </div>`;
     const slot = shell.querySelector('.c-admin__actions');
     actions.forEach((a) => { a.removeAttribute('slot'); if (a.tagName === 'S-BUTTON' && a.getAttribute('variant') !== 'primary') a.setAttribute('variant', 'secondary'); slot.appendChild(a); });
@@ -660,46 +660,71 @@
     draw();
     if (window.ResizeObserver) new ResizeObserver(draw).observe(node);
   }
-  // Barras verticales con valores negativos (profit por orden): data-bars='[["#1042", 42.1], ...]'.
-  // Positivos en el color de la serie, negativos en rojo; tooltip oscuro igual que lineChart.
+  // Barras verticales al estilo Polaris Viz (medido en Shopify Analytics, 26/10): color de serie sólido (Shopify usa #13acf0; aquí la serie 1 de Cifra),
+  // radio de 3px solo en el extremo del valor (la base queda recta, también en negativos), grilla horizontal,
+  // ejes de 11px, tooltip oscuro y al pasar el mouse las demás barras se atenúan. Se redibuja con el ancho real.
+  // data-bars='[["#1042", 42.1], ...]' data-prefix="$" data-title="…" data-legend="Net profit"
   function barChart(node) {
     const data = JSON.parse(node.dataset.bars);
-    const prefix = node.dataset.prefix || '';
-    const title = node.dataset.title || 'Bar chart';
-    const W = 600, H = 220, L = 48, R = 12, T = 12, B = 28;
+    const prefix = node.dataset.prefix || "";
+    const title = node.dataset.title || "Bar chart";
+    const legend = node.dataset.legend || title;
+    const color = node.dataset.color || "var(--c-chart-1)";
+    const H = Number(node.dataset.height) || 240, L = 52, R = 8, T = 10, B = 30;
     const vals = data.map((d) => d[1]);
     const ticks = niceTicks(Math.min(0, ...vals), Math.max(0, ...vals));
     const min = ticks[0], max = ticks[ticks.length - 1];
     const sy = (v) => T + (1 - (v - min) / (max - min || 1)) * (H - T - B);
-    const step = (W - L - R) / data.length, bw = Math.min(28, step * 0.6);
-
-    const wrap = document.createElement('div');
-    wrap.className = 'c-chartwrap';
-    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'c-chart', role: 'img', 'aria-label': title });
-    ticks.forEach((v) => {
-      el('line', { x1: L, x2: W - R, y1: sy(v), y2: sy(v), stroke: v === 0 ? '#cfcfcf' : 'var(--c-chart-grid)' }, svg);
-      el('text', { x: L - 8, y: sy(v) + 4, 'text-anchor': 'end' }, svg).textContent = fmtAxis(v, prefix, '');
-    });
-    const tip = document.createElement('div');
-    tip.className = 'c-charttip';
+    const wrap = document.createElement("div");
+    wrap.className = "c-chartwrap c-barchart";
+    const host = document.createElement("div");
+    const tip = document.createElement("div");
+    tip.className = "c-charttip";
     tip.hidden = true;
-    data.forEach(([label, v], i) => {
-      const cx = L + step * i + step / 2;
-      const y0 = sy(0), y1 = sy(v);
-      const bar = el('rect', { x: cx - bw / 2, y: Math.min(y0, y1), width: bw, height: Math.max(1, Math.abs(y1 - y0)), rx: 4, fill: v < 0 ? 'var(--c-negative)' : 'var(--c-chart-1)', class: 'c-bar' }, svg);
-      if (data.length <= 14 || i % 2 === 0) el('text', { x: cx, y: H - 8, 'text-anchor': 'middle' }, svg).textContent = label;
-      bar.addEventListener('mouseenter', () => {
-        tip.innerHTML = `<strong>${label}</strong><span class="c-charttip__value">${fmtValue(v, prefix, '')}</span>`;
-        tip.hidden = false;
-        const r = svg.getBoundingClientRect();
-        const left = (cx / W) * r.width;
-        tip.style.left = (left + 14 + tip.offsetWidth > r.width ? left - tip.offsetWidth - 14 : left + 14) + 'px';
-        tip.style.top = Math.max(0, (Math.min(y0, y1) / H) * r.height - 10) + 'px';
-      });
-      bar.addEventListener('mouseleave', () => { tip.hidden = true; });
-    });
-    wrap.append(svg, tip);
+    const leg = document.createElement("div");
+    leg.className = "c-legend";
+    leg.innerHTML = `<span><span class="c-legend__swatch" style="background:${color}"></span>${legend}</span>`;
+    wrap.append(host, tip, leg);
     node.replaceWith(wrap);
+    // Path con esquinas redondeadas solo arriba (positivo) o abajo (negativo)
+    const barPath = (x, w, y0, y1) => {
+      const h = Math.abs(y1 - y0), r = Math.min(3, h, w / 2), up = y1 < y0;
+      if (h < 0.5) return `M${x},${y0}h${w}`;
+      return up
+        ? `M${x},${y0}V${y1 + r}a${r},${r} 0 0 1 ${r},-${r}h${w - 2 * r}a${r},${r} 0 0 1 ${r},${r}V${y0}Z`
+        : `M${x},${y0}V${y1 - r}a${r},${r} 0 0 0 ${r},${r}h${w - 2 * r}a${r},${r} 0 0 0 ${r},-${r}V${y0}Z`;
+    };
+    const draw = () => {
+      const W = host.clientWidth;
+      if (!W) return;
+      const step = (W - L - R) / data.length, bw = Math.min(48, step * 0.72);
+      const svg = el("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, class: "c-chart c-chart--fluid", role: "img", "aria-label": title });
+      ticks.forEach((v) => {
+        el("line", { x1: L, x2: W - R, y1: sy(v), y2: sy(v), stroke: v === 0 ? "#dcdcdc" : "var(--c-chart-grid)" }, svg);
+        el("text", { x: L - 8, y: sy(v) + 4, "text-anchor": "end" }, svg).textContent = fmtAxis(v, prefix, "");
+      });
+      const every = Math.ceil(data.length / Math.max(1, Math.floor((W - L - R) / 56)));
+      const bars = data.map(([label, v], i) => {
+        const x = L + step * i + (step - bw) / 2;
+        if (i % every === 0) el("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle" }, svg).textContent = label;
+        return el("path", { d: barPath(x, bw, sy(0), sy(v)), fill: color, class: "c-bar" }, svg);
+      });
+      data.forEach(([label, v], i) => {
+        const hit = el("rect", { x: L + step * i, y: T, width: step, height: H - T - B, fill: "transparent" }, svg);
+        hit.addEventListener("mouseenter", () => {
+          bars.forEach((b, k) => b.classList.toggle("is-dim", k !== i));
+          tip.innerHTML = `<strong>${title}</strong><div class="c-charttip__row"><i style="background:${color}"></i>${label}</div><span class="c-charttip__value">${fmtValue(v, prefix, "")}</span>`;
+          tip.hidden = false;
+          const cx = L + step * i + step / 2;
+          tip.style.left = (cx + 14 + tip.offsetWidth > W ? cx - tip.offsetWidth - 14 : cx + 14) + "px";
+          tip.style.top = Math.max(0, Math.min(sy(0), sy(v)) - 10) + "px";
+        });
+      });
+      svg.addEventListener("mouseleave", () => { tip.hidden = true; bars.forEach((b) => b.classList.remove("is-dim")); });
+      host.replaceChildren(svg);
+    };
+    draw();
+    if (window.ResizeObserver) new ResizeObserver(draw).observe(host);
   }
 
   // Pasos del agente ("3 steps completed"): el botón despliega la lista de herramientas que usó.

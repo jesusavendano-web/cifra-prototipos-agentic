@@ -33,6 +33,8 @@
   --c-chart-4: #e0448f;
   --c-chart-5: #36c2b4;
   --c-chart-grid: #ececec;
+  /* Serie 1 de Polaris Viz en Shopify Analytics (--pvi-series-color-01) */
+  --c-series-1: #13acf0;
   --c-chart-area: rgba(58, 169, 240, 0.10);
 
   /* Forma */
@@ -240,7 +242,7 @@ body.show-custom [data-custom]::before {
 /* Gráficas (SVG generado por cifra.js)                                 */
 /* ------------------------------------------------------------------ */
 .c-chart { width: 100%; height: 220px; display: block; }
-.c-chart text { font: 11px var(--c-font); fill: var(--c-text-secondary); }
+.c-chart text { font: 11px var(--c-font); fill: #70707b; }
 .c-legend { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; color: var(--c-text-secondary); font-size: var(--c-fs-small); margin-top: 6px; }
 .c-legend__swatch { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 .c-legend__dash { display: inline-block; width: 14px; border-top: 2px dashed var(--c-chart-1); margin-right: 6px; vertical-align: middle; }
@@ -1181,8 +1183,10 @@ body.no-fade::after { display: none; }
 .c-hero__chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
 
 /* Barras del gráfico de profit por orden */
-.c-bar { cursor: default; transition: opacity .1s; }
-.c-bar:hover { opacity: .8; }
+.c-bar { transition: opacity .15s ease; }
+.c-bar.is-dim { opacity: .3; }
+.c-chart--fluid { height: auto; }
+.c-barchart { position: relative; }
 
 /* Vista previa del email del digest (simula el cuerpo del correo) */
 .c-mailpreview { border: 1px solid var(--c-border); border-radius: 16px; background: #fafafa; padding: 20px; display: grid; gap: 12px; }
@@ -1257,3 +1261,56 @@ body.has-admin .c-admin.is-collapsed ~ ::after { left: 4px; }
 .c-admin__actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .c-admin__actions + .c-admin__more { margin-left: 4px; }
 .c-admin__scroll { position: relative; }
+/* IndexTable: nombre + descripción en dos líneas (Automations) */
+.c-indextable td .c-sub { display: block; font-weight: 400; color: var(--c-text-secondary); }
+.c-indextable td:has(.c-sub) { height: auto; padding-top: 8px; padding-bottom: 8px; }
+.c-indextable__bar .c-tabs { flex-wrap: nowrap; }
+/* Carrusel del briefing en el Home: una card de Home por hallazgo, con scroll-snap */
+.c-carousel { margin: -6px; }
+.c-carousel__track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; column-gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 6px; scroll-padding: 6px; }
+.c-carousel__track::-webkit-scrollbar { display: none; }
+.c-carousel__slide { scroll-snap-align: start; }
+.c-carousel__count { font-variant-numeric: tabular-nums; }
+.c-carousel__dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+.c-carousel__dots i { width: 6px; height: 6px; border-radius: 50%; background: #d4d4d4; transition: width .2s, background .2s; }
+.c-carousel__dots i.is-on { width: 18px; border-radius: 3px; background: #616161; }
+
+/* Onboarding: preview agéntico (chat que se responde solo; visual de "Ask Cifra" en getcifra.com) */
+.c-pvchat { border: 1px solid var(--c-border); border-radius: 16px; background: #fff; overflow: hidden; display: flex; flex-direction: column; height: 520px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.c-pvchat__head { display: flex; align-items: center; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+.c-pvchat__q { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.c-pvchat__tools { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; color: var(--c-text-secondary); }
+.c-pvchat__tag { font-size: 11px; padding: 2px 8px; border-radius: 9999px; background: var(--c-surface-subdued); }
+.c-pvchat__body { flex: 1; overflow: hidden; padding: 18px 18px 8px; display: grid; gap: 12px; align-content: start; transition: opacity .4s ease; }
+.c-pvchat__body.is-out { opacity: 0; }
+.c-pvchat__in { animation: c-pvchat-in .35s ease both; }
+@keyframes c-pvchat-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.c-pvchat__bubble { justify-self: end; max-width: 80%; padding: 8px 14px; border-radius: 14px; background: #f3f3f3; font-size: 13px; }
+.c-pvchat__steps { display: inline-flex; align-items: center; gap: 6px; color: var(--c-text-secondary); font-size: 13px; font-weight: 500; }
+.c-pvchat__answer { font-size: 13px; line-height: 20px; }
+.c-pvchat__answer b { font-weight: 650; }
+.c-pvchat__card { border: 1px solid var(--c-border); border-radius: 12px; overflow: hidden; font-size: 13px; }
+.c-pvchat__cardhead { padding: 12px 14px 4px; font-weight: 600; }
+.c-pvchat__metric { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 8px 14px 12px; }
+.c-pvchat__metric a { display: block; color: #005bd3; font-weight: 500; }
+.c-pvchat__metric small { color: var(--c-text-secondary); font-size: 12px; }
+.c-pvchat__metric b { font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.c-pvchat__cardfoot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 14px; border-top: 1px solid #f0f0f0; color: var(--c-text-secondary); font-size: 12px; }
+.c-pvchat__table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.c-pvchat__table th, .c-pvchat__table td { padding: 7px 14px; text-align: right; }
+.c-pvchat__table th:first-child, .c-pvchat__table td:first-child { text-align: left; }
+.c-pvchat__table thead th { font-weight: 400; color: var(--c-text-secondary); background: #f7f7f7; }
+.c-pvchat__table tbody tr + tr td { border-top: 1px solid #f2f2f2; }
+.c-pvchat__kv { display: grid; grid-template-columns: 90px 1fr; gap: 6px 12px; padding: 12px 14px; }
+.c-pvchat__kv span { color: var(--c-text-secondary); }
+.c-pvchat__kv b { font-weight: 500; }
+.c-pvchat__btn { padding: 4px 12px; border-radius: 9px; background: #303030; color: #fff; font-weight: 600; white-space: nowrap; }
+.c-pvchat__card--locked { background: #fafafa; }
+.c-pvchat__card--locked .c-pvchat__cardfoot { border-top-style: dashed; justify-content: flex-start; }
+.c-pvchat__ghost { display: grid; gap: 8px; padding: 14px; }
+.c-pvchat__ghost .c-skeleton { height: 12px; }
+.c-pvchat__ghost .c-skeleton:nth-child(2) { width: 70%; }
+.c-pvchat__ghost .c-skeleton:nth-child(3) { width: 45%; }
+.c-pvchat__composer { display: flex; align-items: center; gap: 10px; margin: 8px 14px 14px; padding: 8px 8px 8px 12px; border: 1px solid var(--c-border); border-radius: 14px; color: #8a8a8a; font-size: 13px; }
+.c-pvchat__composer span:nth-child(2) { flex: 1; }
+.c-pvchat__send { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #f1f1f1; }
