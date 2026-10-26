@@ -19,6 +19,90 @@
     ['system-states.html', 'System states'],
   ];
 
+  // ---------------------------------------------------------------- admin shell
+  // Réplica del marco del admin de Shopify (medido en admin.shopify.com, 26/10): sidebar oscuro de 220px con
+  // filas de 30px, la app abierta con su navegación (sub-items) y el contenido en una tarjeta con radio 12px,
+  // margen de 4px y title bar de 54px. En la app real esto lo pinta Shopify; aquí es solo para que el prototipo
+  // se vea como dentro del admin. Se omite con <body data-shell="none">.
+  const APP_NAV = [
+    ['inbox', 'inbox.html', 'Inbox'],
+    ['automations', 'automations.html', 'Automations'],
+    ['orders', 'orders-profit.html', 'Profit per order'],
+    ['dashboards', 'dashboard.html', 'Dashboards'],
+    ['tree', 'metric-tree.html', 'Metric tree'],
+    ['integrations', 'integrations.html', 'Integrations'],
+    ['settings', 'settings.html', 'Settings'],
+  ];
+  // Pantalla → item activo del nav de la app + título del title bar (sin título = raíz de la app)
+  const APP_PAGES = {
+    'home.html': ['home'], 'home-sync.html': ['home'], 'chat.html': ['home'], 'onboarding.html': ['home'], 'system-states.html': ['home'],
+    'inbox.html': ['inbox', 'Inbox'],
+    'automations.html': ['automations', 'Automations'], 'automation-new.html': ['automations', 'New automation'],
+    'orders-profit.html': ['orders', 'Profit per order'],
+    'dashboard.html': ['dashboards', 'Profit & Loss'], 'dashboard-customize.html': ['dashboards', 'Customize dashboard'],
+    'metric-tree.html': ['tree', 'Metric tree'],
+    'integrations.html': ['integrations', 'Integrations'], 'integration-meta.html': ['integrations', 'Meta Ads'], 'integration-klaviyo.html': ['integrations', 'Klaviyo'],
+    'settings.html': ['settings', 'Settings'], 'settings-cost-products.html': ['settings', 'Product costs'], 'settings-cost-shipping.html': ['settings', 'Shipping costs'],
+    'settings-cost-gateways.html': ['settings', 'Gateway costs'], 'settings-cost-custom.html': ['settings', 'Custom costs'],
+  };
+  const ADMIN_NAV = [
+    ['home', 'Home'], ['order', 'Orders', '1,862'], ['product', 'Products'], ['person', 'Customers'], ['chart-histogram-growth', 'Growth'],
+    ['discount', 'Discounts'], ['content', 'Content'], ['globe', 'Markets'], ['cash-dollar', 'Finance'], ['chart-vertical', 'Analytics'],
+  ];
+  function adminShell() {
+    if (document.body.dataset.shell === 'none') return;
+    const here = location.pathname.split('/').pop() || 'index.html';
+    const [active, mapped] = APP_PAGES[here] || ['home'];
+    // En el admin, App Bridge pinta el heading, el breadcrumb y las acciones de s-page en el title bar:
+    // se sacan de la página para no duplicarlos.
+    const page = document.querySelector('s-page');
+    const title = (page && page.getAttribute('heading')) || mapped;
+    const crumb = page && page.querySelector(':scope > [slot="breadcrumb-actions"]');
+    const backHref = (crumb && crumb.getAttribute('href')) || 'home.html';
+    const actions = page ? [...page.querySelectorAll(':scope > [slot="secondary-actions"]'), ...page.querySelectorAll(':scope > [slot="primary-action"]')] : [];
+    if (page) { page.removeAttribute('heading'); if (crumb) crumb.remove(); }
+    const row = (icon, label, extra = '') => `<span class="c-admin__item"><s-icon type="${icon}"></s-icon><span>${label}</span>${extra}</span>`;
+    const shell = document.createElement('div');
+    shell.className = 'c-admin';
+    shell.innerHTML = `
+      <aside class="c-admin__nav" aria-label="Shopify admin">
+        <div class="c-admin__brand"><img src="assets/logos/shopify-mark.svg" alt="Shopify"><button type="button" class="c-admin__toggle" aria-label="Collapse sidebar"><s-icon type="layout-sidebar-left"></s-icon></button></div>
+        <div class="c-admin__search"><s-icon type="search"></s-icon><span>Search</span><kbd>Ctrl K</kbd></div>
+        <div class="c-admin__scroll">
+          ${ADMIN_NAV.map(([i, l, n]) => row(i, l, n ? `<b class="c-admin__count">${n}</b>` : '')).join('')}
+          <span class="c-admin__group">Sales channels <s-icon type="chevron-right" size="small"></s-icon></span>
+          ${row('store', 'Online Store')}${row('magic', 'Agentic')}
+          <span class="c-admin__group">Apps <s-icon type="chevron-right" size="small"></s-icon></span>
+          <a class="c-admin__item c-admin__app${active === 'home' ? ' is-current' : ''}" href="home.html"><img src="assets/img/cifra-icon-blue.svg" alt=""><span>Cifra Analytics</span><s-icon type="pin" size="small"></s-icon></a>
+          ${APP_NAV.map(([k, h, l]) => `<a class="c-admin__sub${k === active ? ' is-current' : ''}" href="${h}"${k === active ? ' aria-current="page"' : ''}>${l}</a>`).join('')}
+        </div>
+        <div class="c-admin__foot">
+          ${row('settings', 'Settings')}
+          <span class="c-admin__store"><i>CF</i><span>cifra-analytics</span><em>dev</em><s-icon type="notification"></s-icon></span>
+        </div>
+      </aside>
+      <div class="c-admin__main">
+        <header class="c-admin__titlebar">
+          ${title ? `<a class="c-admin__back" href="${backHref}" aria-label="Back"><s-icon type="chevron-left"></s-icon></a>` : ''}
+          <img src="assets/img/cifra-icon-blue.svg" alt="" width="20" height="20">
+          ${title ? `<span class="c-admin__slash">/</span><strong>${title}</strong>` : '<strong>Cifra Analytics</strong>'}
+          <span class="c-admin__actions"></span>
+          <span class="c-admin__more" aria-hidden="true"><i></i><i></i><i></i></span>
+        </header>
+        <div class="c-admin__frame"></div>
+        <div class="c-admin__sidekick" aria-hidden="true"><span class="c-admin__sk-logo"><s-icon type="magic" size="small"></s-icon></span>Work with Sidekick<s-icon type="plus" size="small"></s-icon></div>
+      </div>`;
+    const slot = shell.querySelector('.c-admin__actions');
+    actions.forEach((a) => { a.removeAttribute('slot'); if (a.tagName === 'S-BUTTON' && a.getAttribute('variant') !== 'primary') a.setAttribute('variant', 'secondary'); slot.appendChild(a); });
+    const frame = shell.querySelector('.c-admin__frame');
+    while (document.body.firstChild) frame.appendChild(document.body.firstChild);
+    document.body.appendChild(shell);
+    document.body.classList.add('has-admin');
+    shell.querySelector('.c-admin__toggle').addEventListener('click', () => shell.classList.toggle('is-collapsed'));
+    const cur = shell.querySelector('.c-admin__sub.is-current');
+    if (cur) { const sc = shell.querySelector('.c-admin__scroll'); sc.scrollTop = Math.max(0, cur.offsetTop - sc.clientHeight + 60); }
+  }
+
   const svgNS = 'http://www.w3.org/2000/svg';
   const fmt = (n) => n.toLocaleString('en-US', { maximumFractionDigits: 0 });
 
@@ -656,7 +740,12 @@
   window.CifraAssets = { hydrate };
 
   document.addEventListener('DOMContentLoaded', () => {
+    adminShell();
     protoBar();
+    const bar = document.querySelector('.proto-bar');
+    const setBarH = () => document.documentElement.style.setProperty('--proto-h', bar.offsetHeight + 'px');
+    setBarH();
+    if (window.ResizeObserver) new ResizeObserver(setBarH).observe(bar);
     hydrate();
     metricTips();
     datePickers();

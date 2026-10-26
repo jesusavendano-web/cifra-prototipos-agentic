@@ -1192,3 +1192,73 @@ body.no-fade::after { display: none; }
 
 /* Lista de entrada del Inbox: fila clicable con indicador de no leído */
 .c-unread { width: 8px; height: 8px; border-radius: 50%; background: var(--c-chart-1); flex: none; display: inline-block; }
+
+/* ------------------------------------------------------------------ */
+/* Admin shell: marco del admin de Shopify alrededor de cada pantalla   */
+/* (lo pinta Shopify en la app real; medidas tomadas de admin.shopify.com) */
+/* ------------------------------------------------------------------ */
+body.has-admin { background: #1a1a1a; overflow: hidden; }
+body.has-admin::after { left: 224px; right: 4px; bottom: 4px; border-radius: 0 0 12px 12px; }
+.c-admin { --admin-nav: 220px; display: flex; height: calc(100vh - var(--proto-h, 36px)); background: #1a1a1a; color: #dcdcdc; }
+.c-admin__nav { width: var(--admin-nav); flex: none; display: flex; flex-direction: column; padding: 0 0 8px; font-size: 13px; min-height: 0; }
+.c-admin__brand { display: flex; align-items: center; justify-content: space-between; height: 54px; padding: 0 16px 0 18px; }
+.c-admin__brand img { width: 22px; height: 22px; filter: drop-shadow(0 0 0 #95bf47); }
+.c-admin__toggle { all: unset; cursor: pointer; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; color: #b5b5b5; }
+.c-admin__toggle:hover { background: rgba(255,255,255,.08); color: #fff; }
+.c-admin__search { display: flex; align-items: center; gap: 6px; margin: 0 12px 12px; height: 30px; padding: 0 10px; border-radius: 10px; background: #303030; color: #b5b5b5; box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
+.c-admin__search span { flex: 1; }
+.c-admin__search kbd { font: 12px var(--c-font); color: #8a8a8a; }
+.c-admin__scroll { flex: 1; overflow: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: #3a3a3a transparent; }
+.c-admin__item, .c-admin__sub { display: flex; align-items: center; gap: 8px; height: 30px; margin: 0 12px; padding: 0 8px; border-radius: 8px; color: #dcdcdc; font-weight: 450; text-decoration: none; white-space: nowrap; }
+.c-admin__item:hover, .c-admin__sub:hover { background: rgba(255,255,255,.06); color: #fff; }
+.c-admin__item s-icon { color: #b5b5b5; flex: none; }
+.c-admin__item > span { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.c-admin__count { font: 600 12px var(--c-font); color: #dcdcdc; background: #3a3a3a; border-radius: 8px; padding: 1px 8px; }
+.c-admin__group { display: flex; align-items: center; gap: 2px; height: 30px; margin: 10px 12px 0; padding: 0 8px; color: #a6a6a6; font-size: 12px; font-weight: 500; }
+.c-admin__app img { width: 20px; height: 20px; border-radius: 5px; flex: none; }
+.c-admin__app { color: #fcfcfc; font-weight: 600; }
+.c-admin__app.is-current { background: #303030; }
+.c-admin__app s-icon { opacity: .7; }
+.c-admin__sub { padding-left: 34px; color: #a6a6a6; }
+.c-admin__sub.is-current { background: #303030; color: #fcfcfc; font-weight: 600; }
+.c-admin__foot { border-top: 0; padding-top: 6px; }
+.c-admin__store { display: flex; align-items: center; gap: 8px; height: 32px; margin: 4px 12px 0; padding: 0 8px; color: #dcdcdc; }
+.c-admin__store i { font: 700 10px/22px var(--c-font); font-style: normal; width: 22px; height: 22px; border-radius: 6px; background: #c32fd6; color: #fff; text-align: center; flex: none; }
+.c-admin__store span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-admin__store em { font: 500 11px/18px var(--c-font); font-style: normal; padding: 0 6px; border-radius: 6px; background: #3a3a3a; color: #cfcfcf; }
+.c-admin__store s-icon { color: #b5b5b5; }
+
+.c-admin__main { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; margin: 4px 4px 4px 0; background: var(--c-bg); border-radius: 12px; overflow: hidden; color: var(--c-text); }
+.c-admin__titlebar { flex: none; display: flex; align-items: center; gap: 8px; height: 54px; padding: 0 16px; background: #fff; border-bottom: 1px solid #ebebeb; font-size: 13px; }
+.c-admin__titlebar strong { font-weight: 600; }
+.c-admin__titlebar img { border-radius: 5px; }
+.c-admin__back { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; color: var(--c-text); }
+.c-admin__back:hover { background: var(--c-surface-hover); }
+.c-admin__slash { color: #b5b5b5; }
+.c-admin__more { margin-left: auto; display: inline-flex; gap: 3px; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; }
+.c-admin__more i { width: 3px; height: 3px; border-radius: 50%; background: var(--c-text); }
+.c-admin__frame { flex: 1; min-height: 0; overflow: auto; }
+.c-admin__sidekick { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 40; display: flex; align-items: center; gap: 8px; width: 360px; max-width: calc(100% - 32px); height: 40px; padding: 0 14px 0 8px; border-radius: 14px; background: #fff; box-shadow: var(--c-shadow-popover); color: #8a8a8a; font-size: 13px; pointer-events: none; }
+.c-admin__sidekick > s-icon { margin-left: auto; }
+.c-admin__sk-logo { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; background: #5b3fd6; color: #fff; }
+
+/* Colapsar el sidebar con el botón del brand (como el admin) */
+.c-admin.is-collapsed .c-admin__nav { display: none; }
+.c-admin.is-collapsed .c-admin__main { margin-left: 4px; }
+body.has-admin .c-admin.is-collapsed ~ ::after { left: 4px; }
+
+/* Pantallas de alto completo: se miden contra el frame y no contra la ventana */
+.has-admin .c-chat { height: calc(100vh - var(--proto-h, 36px) - 8px - 54px - 112px); }
+.has-admin .c-ob { height: calc(100vh - var(--proto-h, 36px) - 8px - 54px); }
+
+@media (max-width: 760px) {
+  .c-admin__nav { display: none; }
+  .c-admin__main { margin-left: 4px; }
+  body.has-admin::after { left: 4px; }
+}
+/* s-icon no hereda currentColor: en el sidebar oscuro se aclara con un filtro para igualar el gris #b5b5b5 del admin */
+.c-admin__nav s-icon { filter: invert(1) brightness(.78); }
+.c-admin__sk-logo s-icon { filter: invert(1); }
+.c-admin__actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.c-admin__actions + .c-admin__more { margin-left: 4px; }
+.c-admin__scroll { position: relative; }
