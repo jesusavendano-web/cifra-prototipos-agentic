@@ -22,7 +22,7 @@
   // ---------------------------------------------------------------- admin shell
   // Réplica del marco del admin de Shopify (medido en admin.shopify.com, 26/10): sidebar oscuro de 220px con
   // filas de 30px, la app abierta con su navegación (sub-items) y el contenido en una tarjeta con radio 12px,
-  // margen de 4px y title bar de 54px. En la app real esto lo pinta Shopify; aquí es solo para que el prototipo
+  // margen de 4px y title bar de 54px (sin la barra de Sidekick). En la app real esto lo pinta Shopify; aquí es solo para que el prototipo
   // se vea como dentro del admin. Se omite con <body data-shell="none">.
   const APP_NAV = [
     ['inbox', 'inbox.html', 'Inbox'],
@@ -89,8 +89,7 @@
           <span class="c-admin__actions"></span>
           <span class="c-admin__more" aria-hidden="true"><i></i><i></i><i></i></span>
         </header>
-        <div class="c-admin__frame"></div>
-        <div class="c-admin__sidekick" aria-hidden="true"><span class="c-admin__sk-logo"><s-icon type="magic" size="small"></s-icon></span>Work with Sidekick<s-icon type="plus" size="small"></s-icon></div>
+        <div class="c-admin__frame"></div>
       </div>`;
     const slot = shell.querySelector('.c-admin__actions');
     actions.forEach((a) => { a.removeAttribute('slot'); if (a.tagName === 'S-BUTTON' && a.getAttribute('variant') !== 'primary') a.setAttribute('variant', 'secondary'); slot.appendChild(a); });

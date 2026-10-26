@@ -1238,9 +1238,6 @@ body.has-admin::after { left: 224px; right: 4px; bottom: 4px; border-radius: 0 0
 .c-admin__more { margin-left: auto; display: inline-flex; gap: 3px; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; }
 .c-admin__more i { width: 3px; height: 3px; border-radius: 50%; background: var(--c-text); }
 .c-admin__frame { flex: 1; min-height: 0; overflow: auto; }
-.c-admin__sidekick { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 40; display: flex; align-items: center; gap: 8px; width: 360px; max-width: calc(100% - 32px); height: 40px; padding: 0 14px 0 8px; border-radius: 14px; background: #fff; box-shadow: var(--c-shadow-popover); color: #8a8a8a; font-size: 13px; pointer-events: none; }
-.c-admin__sidekick > s-icon { margin-left: auto; }
-.c-admin__sk-logo { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; background: #5b3fd6; color: #fff; }
 
 /* Colapsar el sidebar con el botón del brand (como el admin) */
 .c-admin.is-collapsed .c-admin__nav { display: none; }
@@ -1248,7 +1245,7 @@ body.has-admin::after { left: 224px; right: 4px; bottom: 4px; border-radius: 0 0
 body.has-admin .c-admin.is-collapsed ~ ::after { left: 4px; }
 
 /* Pantallas de alto completo: se miden contra el frame y no contra la ventana */
-.has-admin .c-chat { height: calc(100vh - var(--proto-h, 36px) - 8px - 54px - 112px); }
+.has-admin .c-chat { height: calc(100vh - var(--proto-h, 36px) - 8px - 54px - 64px); }
 .has-admin .c-ob { height: calc(100vh - var(--proto-h, 36px) - 8px - 54px); }
 
 @media (max-width: 760px) {
@@ -1258,7 +1255,6 @@ body.has-admin .c-admin.is-collapsed ~ ::after { left: 4px; }
 }
 /* s-icon no hereda currentColor: en el sidebar oscuro se aclara con un filtro para igualar el gris #b5b5b5 del admin */
 .c-admin__nav s-icon { filter: invert(1) brightness(.78); }
-.c-admin__sk-logo s-icon { filter: invert(1); }
 .c-admin__actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .c-admin__actions + .c-admin__more { margin-left: 4px; }
 .c-admin__scroll { position: relative; }
