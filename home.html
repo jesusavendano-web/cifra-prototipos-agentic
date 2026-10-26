@@ -16,7 +16,10 @@
   Único cambio: al hacer hover en cada métrica del strip se despliega la card de gráfica con el patrón
   del Home de Shopify (valor, título + descripción, editar, info, línea con periodo anterior, leyenda).
   Estado de carga: home.html#loading
-  Nativo → s-button, s-heading, s-paragraph, s-icon
+  Versión agéntica (ENG-2418): el AskBar es el punto de entrada; debajo, prompts sugeridos. "Insights" pasa a ser
+  el "Briefing" que escribe el agente cada mañana, y una sección "Running for you" muestra digests y alertas activas.
+  Las Suggested actions son las que el agente necesita para responder mejor (costos, integraciones).
+  Nativo → s-button, s-heading, s-paragraph, s-icon, s-section, s-badge, s-clickable-chip, s-stack, s-divider
   Custom → strip de métricas + popover de gráfica, hero + prompt IA, cards con ilustración (radio 28px), skeleton
 -->
 <s-page inlineSize="large">
@@ -82,7 +85,7 @@
       <h2>Good evening, Jesus!</h2>
       <p>Let's keep your profit growing.</p>
       <form class="c-ask" onsubmit="return false" data-custom="AskBar">
-        <textarea class="c-ask__input" rows="1" placeholder="How much profit did I make last month?" aria-label="Ask Cifra"></textarea>
+        <textarea class="c-ask__input" rows="1" placeholder="Ask about your profit, schedule a summary or set an alert" aria-label="Ask Cifra"></textarea>
         <div class="c-ask__bar">
           <span class="c-prompt__logo" aria-hidden="true">C</span>
           <span class="c-ask__tools">
@@ -93,39 +96,82 @@
           </span>
         </div>
       </form>
+      <div class="c-hero__chips">
+        <s-clickable-chip data-ask="What was my most profitable product in the last 90 days?">Most profitable product</s-clickable-chip>
+        <s-clickable-chip data-ask="Show me profit per order for my last 14 orders">Profit per order</s-clickable-chip>
+        <s-clickable-chip data-ask="Alert me when sales drop more than normal">Alert me when sales drop</s-clickable-chip>
+        <s-clickable-chip data-ask="Send me a profit summary every Monday">Weekly profit summary</s-clickable-chip>
+      </div>
     </div>
 
-    <!-- Insights -->
+    <!-- Briefing del agente (reemplaza la card de Insights) -->
     <div class="c-home__section">
-      <div class="c-row c-row--between c-section-label"><span>Insights</span><span>Updated today at 8:00 PM</span></div>
-      <article class="c-homecard c-homecard--insight" data-custom="HomeCard">
-        <h3 class="c-homecard__title">Top Profit Product</h3>
-        <s-paragraph>Default Title generated $1,816.86 in profit over Sep 14 – Oct 13, 2026 across 13 orders (69.9% margin). Return rate is 0%.</s-paragraph>
-        <div class="c-homecard__actions"><a class="c-homebtn" href="report.html">See product report</a></div>
-        <img class="c-homecard__img" style="width:136px;right:0;bottom:-12px" src="assets/img/top-performer.webp" alt="">
-      </article>
+      <div class="c-row c-row--between c-section-label"><span>Today's briefing</span><span>Written by Cifra at 8:00 AM</span></div>
+      <s-section>
+        <s-stack gap="base">
+          <s-paragraph>Yesterday you made <s-text type="strong">$412 net profit</s-text> on 9 orders, 18% below a normal Sunday. Three things worth your attention:</s-paragraph>
+          <s-stack gap="small">
+            <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="critical" icon="alert-triangle">Margin drag</s-badge><s-text>Order #1047 lost $61: WELCOME20 plus free shipping on a $79 cart.</s-text></s-stack>
+            <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="warning" icon="alert-circle">Sudden change</s-badge><s-text>Meta ROAS fell from 3.1 to 1.9 after Friday's new campaign.</s-text></s-stack>
+            <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="info" icon="info">Top performer</s-badge><s-text>The Complete Snowboard keeps a 44.5% net margin. It's your best product.</s-text></s-stack>
+          </s-stack>
+          <s-divider></s-divider>
+          <s-stack direction="inline" gap="small-200">
+            <s-button href="chat.html">Ask a follow-up</s-button>
+            <s-button variant="tertiary" href="inbox.html">See all in inbox</s-button>
+          </s-stack>
+        </s-stack>
+      </s-section>
     </div>
 
-    <!-- Suggested actions -->
+    <!-- Automatizaciones activas -->
     <div class="c-home__section">
-      <div class="c-section-label">Suggested actions</div>
+      <div class="c-row c-row--between c-section-label"><span>Running for you</span><s-link href="automations.html">Manage</s-link></div>
+      <s-grid gridTemplateColumns="1fr 1fr 1fr" gap="base">
+        <s-section>
+          <s-stack gap="small-200">
+            <s-stack direction="inline" justifyContent="space-between" alignItems="center"><s-badge tone="info" icon="calendar">Digest</s-badge><s-text color="subdued">Mon 8:00 AM</s-text></s-stack>
+            <s-heading>Weekly profit summary</s-heading>
+            <s-text color="subdued">Next: Monday, Nov 2 · Email + inbox</s-text>
+          </s-stack>
+        </s-section>
+        <s-section>
+          <s-stack gap="small-200">
+            <s-stack direction="inline" justifyContent="space-between" alignItems="center"><s-badge tone="warning" icon="alert-circle">Alert</s-badge><s-text color="subdued">Checked hourly</s-text></s-stack>
+            <s-heading>Sales drop more than normal</s-heading>
+            <s-text color="subdued">Last triggered Oct 22 · Inbox + email</s-text>
+          </s-stack>
+        </s-section>
+        <s-section>
+          <s-stack gap="small-200" alignItems="start">
+            <s-heading>Let Cifra watch something</s-heading>
+            <s-text color="subdued">Describe it in your words: "tell me when an order loses money".</s-text>
+            <s-button icon="plus" href="automation-new.html">New automation</s-button>
+          </s-stack>
+        </s-section>
+      </s-grid>
+    </div>
+
+    <!-- Suggested actions: lo que el agente necesita para responder mejor -->
+    <div class="c-home__section">
+      <div class="c-section-label">Help Cifra answer better</div>
       <div class="c-home__grid c-home__grid--3">
         <article class="c-homecard" data-custom="HomeCard">
           <h3 class="c-homecard__title">Add your product costs</h3>
-          <s-paragraph>Without cost of goods, every margin Cifra shows is a guess. Enter a cost per variant, or import them in bulk.</s-paragraph>
+          <s-paragraph>3 products have no cost of goods, so Cifra counts them at $0 and their profit is overstated.</s-paragraph>
           <div class="c-homecard__actions"><a class="c-homebtn" href="settings-cost-products.html">Add costs</a></div>
           <img class="c-homecard__img" style="width:150px;right:6px;bottom:24px" src="assets/img/product-costs.webp" alt="">
         </article>
         <article class="c-homecard" data-custom="HomeCard">
-          <h3 class="c-homecard__title">Analyze customer LTV</h3>
-          <s-paragraph>See how much revenue each group of customers brings back over time.</s-paragraph>
-          <div class="c-homecard__actions"><a class="c-homebtn" href="report.html#cohorts">Open cohort report</a></div>
+          <h3 class="c-homecard__title">Connect TikTok Ads</h3>
+          <s-paragraph>Cifra can only see Meta spend today. Connect TikTok so ad costs are part of every profit answer.</s-paragraph>
+          <div class="c-homecard__actions"><a class="c-homebtn" href="integrations.html">Connect</a></div>
           <img class="c-homecard__img" style="width:182px;right:6px;bottom:4px" src="assets/img/analyze-customer-ltv.webp" alt="">
         </article>
         <article class="c-homecard" data-custom="HomeCard">
-          <h3 class="c-homecard__title">Create a custom metric</h3>
-          <s-paragraph>Build a metric from your own formula and use it across your dashboards.</s-paragraph>
-          <div class="c-homecard__actions"><a class="c-homebtn" href="metric-tree.html">Create metric</a></div>
+          <h3 class="c-homecard__title">Connect Omnisend</h3>
+          <s-paragraph>Bring your email revenue in so Cifra can tell which campaigns actually make profit.</s-paragraph>
+          <div class="c-homecard__actions"><a class="c-homebtn" href="integrations.html">Connect</a></div>
           <img class="c-homecard__img" style="width:176px;right:14px;bottom:20px" src="assets/img/create-custom-metric.webp" alt="">
         </article>
       </div>
@@ -169,6 +215,9 @@ document.addEventListener("DOMContentLoaded", () => {
   t.addEventListener("input", () => { b.disabled = !t.value.trim(); });
   t.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (t.value.trim()) location.href = "chat.html"; } });
   b.addEventListener("click", () => { location.href = "chat.html"; });
+  document.querySelectorAll("[data-ask]").forEach((c) => c.addEventListener("click", () => {
+    location.href = /alert/i.test(c.dataset.ask) ? "automation-new.html#alert" : /every|summary/i.test(c.dataset.ask) ? "automation-new.html" : "chat.html";
+  }));
 });
 if (location.hash === "#loading") {
   document.getElementById("home").hidden = true;

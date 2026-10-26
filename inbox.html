@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inbox</title>
+<meta name="shopify-api-key" content="prototype">
+<script src="https://cdn.shopify.com/shopifycloud/polaris-2.0-rc.js"></script>
+<link rel="stylesheet" href="shared/cifra.css">
+<script src="shared/cifra.js" defer></script>
+</head>
+<body>
+
+<!--
+  Pantalla: Inbox (/app/inbox) — NUEVA (ENG-2418), absorbe Insights
+  Todo lo que el agente entrega por su cuenta: digests programados, alertas disparadas e insights que encontró.
+  Cada entrada se puede continuar en el chat con el contexto ya cargado.
+  Estados (hash): (ninguno) feed · #empty sin entregas
+  Nativo → s-page, s-section, s-badge, s-button, s-heading, s-paragraph, s-text, s-empty-state, s-stack
+  Custom → tabs All / Digests / Alerts / Insights, punto de no leído
+-->
+<s-page heading="Inbox" inlineSize="large">
+  <s-link slot="breadcrumb-actions" href="home.html">Home</s-link>
+  <s-button slot="secondary-actions" href="automations.html">Manage automations</s-button>
+  <s-button slot="secondary-actions">Mark all as read</s-button>
+
+  <div id="feed" class="c-stack">
+    <div class="c-row c-row--between" style="flex-wrap:wrap">
+      <div class="c-tabs" role="tablist" data-custom="Tabs">
+        <button class="c-tabs__tab" role="tab" aria-selected="true">All</button>
+        <button class="c-tabs__tab" role="tab" aria-selected="false">Digests</button>
+        <button class="c-tabs__tab" role="tab" aria-selected="false">Alerts</button>
+        <button class="c-tabs__tab" role="tab" aria-selected="false">Insights</button>
+      </div>
+      <s-text color="subdued">2 unread</s-text>
+    </div>
+
+    <div style="max-width:640px;width:100%;margin:0 auto">
+      <s-stack gap="base">
+
+        <s-text color="subdued">Today</s-text>
+        <s-section>
+          <s-stack gap="small">
+            <s-stack direction="inline" justifyContent="space-between" alignItems="center">
+              <s-stack direction="inline" gap="small-200" alignItems="center"><span class="c-unread" aria-label="Unread" data-custom="UnreadDot"></span><s-badge tone="info" icon="calendar">Digest</s-badge><s-text color="subdued">Weekly profit summary · 8:00 AM</s-text></s-stack>
+            </s-stack>
+            <s-heading>Your week in profit · Oct 19 – 25</s-heading>
+            <s-paragraph>You made <s-text type="strong">$3,184 net profit</s-text> last week, <s-text tone="success">up 12%</s-text>, on 61 orders. Your top product was The Complete Snowboard ($812).</s-paragraph>
+            <s-unordered-list>
+              <s-list-item>Cifra Margin Bleeder sold 4 units below cost (-$51).</s-list-item>
+              <s-list-item>Meta ROAS dropped to 1.9 after Friday's campaign.</s-list-item>
+            </s-unordered-list>
+            <s-stack direction="inline" gap="small-200"><s-button href="chat.html">Continue in chat</s-button><s-button variant="tertiary" href="dashboard.html">Open P&amp;L</s-button></s-stack>
+          </s-stack>
+        </s-section>
+
+        <s-section>
+          <s-stack gap="small">
+            <s-stack direction="inline" gap="small-200" alignItems="center"><span class="c-unread" aria-label="Unread" data-custom="UnreadDot"></span><s-badge tone="critical" icon="alert-triangle">Alert</s-badge><s-text color="subdued">Order loses money · 7:12 AM</s-text></s-stack>
+            <s-heading>Order #1047 lost $61</s-heading>
+            <s-paragraph>The WELCOME20 discount plus free shipping turned a $79 order into a loss. It's the 3rd order with this combination this month (-$148 in total).</s-paragraph>
+            <s-stack direction="inline" gap="small-200"><s-button href="chat.html">Ask how to fix it</s-button><s-button variant="tertiary" href="orders-profit.html">See order</s-button></s-stack>
+          </s-stack>
+        </s-section>
+
+        <s-text color="subdued">This week</s-text>
+        <s-section>
+          <s-stack gap="small">
+            <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="warning" icon="alert-circle">Alert</s-badge><s-text color="subdued">Sales drop more than normal · Thu, Oct 22, 3:00 PM</s-text></s-stack>
+            <s-heading>Sales were lower than normal for 3 hours</s-heading>
+            <s-paragraph>From 1:00 to 4:00 PM you made $214, about 45% below a normal Thursday. Checkout conversion dropped from 3.1% to 1.4% while traffic stayed normal. Sales recovered at 4:00 PM.</s-paragraph>
+            <s-stack direction="inline" gap="small-200"><s-button href="chat.html">Ask why</s-button></s-stack>
+          </s-stack>
+        </s-section>
+
+        <s-section>
+          <s-stack gap="small">
+            <s-stack direction="inline" justifyContent="space-between" alignItems="center">
+              <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="info" icon="info">Insight</s-badge><s-text color="subdued">Found by Cifra · Wed, Oct 21</s-text></s-stack>
+              <span class="c-source" aria-label="Source: Shopify">S</span>
+            </s-stack>
+            <s-heading>Cifra Margin Bleeder is dragging your margin</s-heading>
+            <s-paragraph>7.5% gross margin on $1,343 of net sales over the last 30 days, versus 52.1% for the rest of your catalog.</s-paragraph>
+            <s-stack direction="inline" gap="small-200"><s-button href="chat.html">Ask what to do</s-button><s-button variant="tertiary" href="automation-new.html#alert">Watch this product</s-button></s-stack>
+          </s-stack>
+        </s-section>
+
+        <s-section>
+          <s-stack gap="small">
+            <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="info" icon="calendar">Digest</s-badge><s-text color="subdued">Meta ads profitability · Fri, Oct 23, 5:00 PM</s-text></s-stack>
+            <s-heading>Meta ads: 2 of 5 campaigns don't pay back</s-heading>
+            <s-paragraph>"Retargeting – Oct" and "Broad – Snowboards" spent $412 and brought $96 in net profit. The other 3 campaigns returned $3.40 of profit per $1.</s-paragraph>
+            <s-stack direction="inline" gap="small-200"><s-button href="chat.html">Continue in chat</s-button></s-stack>
+          </s-stack>
+        </s-section>
+
+      </s-stack>
+    </div>
+  </div>
+
+  <!-- Estado vacío: inbox.html#empty -->
+  <div id="empty" hidden>
+    <s-section>
+      <s-empty-state heading="Nothing here yet">
+        <s-icon slot="graphic" type="chat"></s-icon>
+        <s-text slot="subheading">Digests, alerts and insights Cifra finds for you will show up here.</s-text>
+        <s-button slot="primary-action" variant="primary" href="automation-new.html">Create your first digest</s-button>
+      </s-empty-state>
+    </s-section>
+  </div>
+</s-page>
+
+<script>
+const empty = location.hash === "#empty";
+document.getElementById("feed").hidden = empty;
+document.getElementById("empty").hidden = !empty;
+</script>
+
+</body>
+</html>

@@ -8,13 +8,13 @@
     ['home-sync.html', 'Home · Sync'],
     ['onboarding.html', 'Onboarding'],
     ['chat.html', 'Chat IA'],
+    ['orders-profit.html', 'Profit por orden'],
+    ['automations.html', 'Automations'],
+    ['automation-new.html', 'Nueva automation'],
+    ['inbox.html', 'Inbox'],
     ['dashboard.html', 'Dashboard'],
-    ['reports.html', 'Reports'],
-    ['report.html', 'Reporte'],
     ['metric-tree.html', 'Metric tree'],
-    ['insights.html', 'Insights'],
     ['integrations.html', 'Integrations'],
-    ['schedule.html', 'Schedule'],
     ['settings.html', 'Settings'],
     ['system-states.html', 'System states'],
   ];
@@ -577,7 +577,61 @@
     draw();
     if (window.ResizeObserver) new ResizeObserver(draw).observe(node);
   }
-  window.CifraCharts = { sparkline, lineChart, donut, cohortChart };
+  // Barras verticales con valores negativos (profit por orden): data-bars='[["#1042", 42.1], ...]'.
+  // Positivos en el color de la serie, negativos en rojo; tooltip oscuro igual que lineChart.
+  function barChart(node) {
+    const data = JSON.parse(node.dataset.bars);
+    const prefix = node.dataset.prefix || '';
+    const title = node.dataset.title || 'Bar chart';
+    const W = 600, H = 220, L = 48, R = 12, T = 12, B = 28;
+    const vals = data.map((d) => d[1]);
+    const ticks = niceTicks(Math.min(0, ...vals), Math.max(0, ...vals));
+    const min = ticks[0], max = ticks[ticks.length - 1];
+    const sy = (v) => T + (1 - (v - min) / (max - min || 1)) * (H - T - B);
+    const step = (W - L - R) / data.length, bw = Math.min(28, step * 0.6);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'c-chartwrap';
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'c-chart', role: 'img', 'aria-label': title });
+    ticks.forEach((v) => {
+      el('line', { x1: L, x2: W - R, y1: sy(v), y2: sy(v), stroke: v === 0 ? '#cfcfcf' : 'var(--c-chart-grid)' }, svg);
+      el('text', { x: L - 8, y: sy(v) + 4, 'text-anchor': 'end' }, svg).textContent = fmtAxis(v, prefix, '');
+    });
+    const tip = document.createElement('div');
+    tip.className = 'c-charttip';
+    tip.hidden = true;
+    data.forEach(([label, v], i) => {
+      const cx = L + step * i + step / 2;
+      const y0 = sy(0), y1 = sy(v);
+      const bar = el('rect', { x: cx - bw / 2, y: Math.min(y0, y1), width: bw, height: Math.max(1, Math.abs(y1 - y0)), rx: 4, fill: v < 0 ? 'var(--c-negative)' : 'var(--c-chart-1)', class: 'c-bar' }, svg);
+      if (data.length <= 14 || i % 2 === 0) el('text', { x: cx, y: H - 8, 'text-anchor': 'middle' }, svg).textContent = label;
+      bar.addEventListener('mouseenter', () => {
+        tip.innerHTML = `<strong>${label}</strong><span class="c-charttip__value">${fmtValue(v, prefix, '')}</span>`;
+        tip.hidden = false;
+        const r = svg.getBoundingClientRect();
+        const left = (cx / W) * r.width;
+        tip.style.left = (left + 14 + tip.offsetWidth > r.width ? left - tip.offsetWidth - 14 : left + 14) + 'px';
+        tip.style.top = Math.max(0, (Math.min(y0, y1) / H) * r.height - 10) + 'px';
+      });
+      bar.addEventListener('mouseleave', () => { tip.hidden = true; });
+    });
+    wrap.append(svg, tip);
+    node.replaceWith(wrap);
+  }
+
+  // Pasos del agente ("3 steps completed"): el botón despliega la lista de herramientas que usó.
+  function agentSteps(root = document) {
+    root.querySelectorAll('.c-steps__toggle:not([data-bound])').forEach((btn) => {
+      btn.setAttribute('data-bound', '');
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', String(open));
+        btn.nextElementSibling.hidden = !open;
+      });
+    });
+  }
+  window.CifraCharts = { sparkline, lineChart, donut, cohortChart, barChart };
+  window.CifraAgent = { agentSteps };
 
   // ---------------------------------------------------------------- assets reales de Cifra
   // Extraídos de app.dev.getcifra.com: logos de marca (BrandIcon), TrendArrow y app icon.
@@ -612,6 +666,8 @@
     document.querySelectorAll('[data-line]').forEach(lineChart);
     document.querySelectorAll('[data-donut]').forEach(donut);
     document.querySelectorAll('[data-cohort-chart]').forEach(cohortChart);
+    document.querySelectorAll('[data-bars]').forEach(barChart);
+    agentSteps();
     sortable();
   });
 })();

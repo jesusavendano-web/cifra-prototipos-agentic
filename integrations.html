@@ -21,6 +21,7 @@
   Nativo → s-search-field, s-section por categoría, cards con s-box/s-clickable, s-badge (Connected / Coming Soon), s-button.
   Custom → filtro por categoría (tabs). Logos: se mantienen los assets actuales.
   Detalles: integration-meta.html (OAuth) e integration-klaviyo.html (API key).
+  ENG-2418: TikTok Ads y Omnisend pasan a Connect (prioridad del weekly 26/10); más fuentes = mejores respuestas del agente.
 -->
 <s-page heading="Integrations" inlineSize="base">
   <s-link slot="breadcrumb-actions" href="home.html">Home</s-link>
@@ -70,7 +71,7 @@
         </s-box>
         <s-box padding="base" border="base" borderRadius="large">
           <s-grid gridTemplateColumns="1fr auto" gap="base">
-            <s-stack gap="small-200"><s-heading>TikTok Ads</s-heading><s-text color="subdued">Social platform for sharing short, engaging videos that entertain users.</s-text><s-stack direction="inline"><s-badge tone="info">Coming Soon</s-badge></s-stack></s-stack>
+            <s-stack gap="small-200"><s-heading>TikTok Ads</s-heading><s-text color="subdued">Social platform for sharing short, engaging videos that entertain users.</s-text><s-stack direction="inline"><s-button icon="plus">Connect</s-button><s-badge tone="success">New</s-badge></s-stack></s-stack>
             <span class="int-logo"><img src="assets/logos/tiktok_ads.svg" alt="TikTok Ads"></span>
           </s-grid>
         </s-box>
@@ -102,6 +103,12 @@
 
     <s-section heading="Marketing">
       <s-grid gridTemplateColumns="1fr 1fr" gap="base">
+        <s-box padding="base" border="base" borderRadius="large">
+          <s-grid gridTemplateColumns="1fr auto" gap="base">
+            <s-stack gap="small-200"><s-heading>Omnisend</s-heading><s-text color="subdued">Email and SMS marketing for ecommerce. Cifra adds campaign revenue to your profit answers.</s-text><s-stack direction="inline" gap="small-200"><s-button icon="plus">Connect</s-button><s-badge tone="success">New</s-badge></s-stack></s-stack>
+            <span class="int-logo"><img src="assets/logos/omnisend.svg" alt="Omnisend" width="40" height="40"></span>
+          </s-grid>
+        </s-box>
         <s-box padding="base" border="base" borderRadius="large">
           <s-grid gridTemplateColumns="1fr auto" gap="base">
             <s-stack gap="small-200"><s-heading>Klaviyo</s-heading><s-text color="subdued">Email marketing platform for automating personalized campaigns that drive engagement.</s-text><s-stack direction="inline"><s-button icon="plus" href="integration-klaviyo.html">Connect</s-button></s-stack></s-stack>

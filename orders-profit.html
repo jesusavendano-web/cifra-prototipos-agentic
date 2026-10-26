@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profit per order</title>
+<meta name="shopify-api-key" content="prototype">
+<script src="https://cdn.shopify.com/shopifycloud/polaris-2.0-rc.js"></script>
+<link rel="stylesheet" href="shared/cifra.css">
+<script src="shared/cifra.js" defer></script>
+</head>
+<body>
+
+<!--
+  Pantalla: Profit per order (/app/orders) — NUEVA (ENG-2418)
+  Pedido del weekly: "visualizar mejor el profit que tenemos por orden" y que la IA lo pueda representar.
+  Es la misma data que el agente usa en el chat (turno 3 de chat.html); aquí se puede revisar orden por orden.
+  Cada orden desglosa: productos (COGS), envío, comisión de pago, descuentos y ad spend atribuido.
+  Nativo → s-page, s-section, s-grid, s-table, s-badge, s-link, s-button, s-select, s-banner, s-text, s-heading
+  Custom → KPI cards, gráfica de barras con negativos (SVG)
+-->
+<s-page heading="Profit per order" inlineSize="large">
+  <s-link slot="breadcrumb-actions" href="home.html">Home</s-link>
+  <s-button slot="primary-action" variant="primary" icon="chat" href="chat.html">Ask Cifra about these orders</s-button>
+  <s-button slot="secondary-actions" icon="export">Export</s-button>
+
+  <s-stack gap="base">
+    <s-grid gridTemplateColumns="200px 220px" gap="small-200">
+      <s-select label="Date range" labelAccessibilityVisibility="exclusive">
+        <s-option value="14" selected>Last 14 orders</s-option>
+        <s-option value="7d">Last 7 days</s-option>
+        <s-option value="30d">Last 30 days</s-option>
+      </s-select>
+      <s-select label="Show" labelAccessibilityVisibility="exclusive">
+        <s-option value="all" selected>All orders</s-option>
+        <s-option value="loss">Orders that lost money</s-option>
+      </s-select>
+    </s-grid>
+
+    <s-grid gridTemplateColumns="1fr 1fr 1fr" gap="base">
+      <article class="c-card" data-custom="KpiCard"><div class="c-card__body"><h3 class="c-card__title">Net profit</h3><div class="c-kpi__row"><span><span class="c-kpi__value">$1,182.00</span> <span class="c-delta c-delta--up">↗ 9.4%</span></span></div></div></article>
+      <article class="c-card" data-custom="KpiCard"><div class="c-card__body"><h3 class="c-card__title">Average profit per order</h3><div class="c-kpi__row"><span><span class="c-kpi__value">$84.43</span> <span class="c-delta c-delta--down">↘ 3.1%</span></span></div></div></article>
+      <article class="c-card" data-custom="KpiCard"><div class="c-card__body"><h3 class="c-card__title">Orders that lost money</h3><div class="c-kpi__row"><span><span class="c-kpi__value">2 of 14</span> <span class="c-delta c-delta--flat">-$99.00</span></span></div></div></article>
+    </s-grid>
+
+    <article class="c-card" data-custom="Chart">
+      <div class="c-card__body">
+        <h3 class="c-card__title">Net profit per order</h3>
+        <span data-bars='[["#1035",96],["#1036",132],["#1037",48],["#1038",110],["#1039",-38],["#1040",71],["#1041",158],["#1042",64],["#1043",122],["#1044",89],["#1045",101],["#1046",77],["#1047",-61],["#1048",213]]' data-prefix="$" data-title="Net profit per order"></span>
+      </div>
+    </article>
+
+    <s-banner tone="info">
+      <s-paragraph>Ad spend is attributed to each order from Meta (last click, 7 days). Connect TikTok Ads so its spend is included too.</s-paragraph>
+      <s-button slot="secondary-actions" href="integrations.html">Connect TikTok Ads</s-button>
+    </s-banner>
+
+    <s-section padding="none">
+      <s-table>
+        <s-table-header-row>
+          <s-table-header listSlot="primary">Order</s-table-header>
+          <s-table-header>Date</s-table-header>
+          <s-table-header format="currency">Net sales</s-table-header>
+          <s-table-header format="currency">Cost of goods</s-table-header>
+          <s-table-header format="currency">Shipping</s-table-header>
+          <s-table-header format="currency">Fees</s-table-header>
+          <s-table-header format="currency">Ad spend</s-table-header>
+          <s-table-header format="currency">Net profit</s-table-header>
+          <s-table-header listSlot="secondary">Margin</s-table-header>
+        </s-table-header-row>
+        <s-table-body id="rows"></s-table-body>
+      </s-table>
+    </s-section>
+  </s-stack>
+</s-page>
+
+<script>
+// Datos de ejemplo coherentes con chat.html (mismas 14 órdenes, mismo profit).
+const ORDERS = [
+  ["#1048", "Oct 25", 389, 118, 18, 11.6, 28.4],
+  ["#1047", "Oct 25", 79, 82, 24, 2.6, 31.4],
+  ["#1046", "Oct 24", 214, 89, 14, 6.6, 27.4],
+  ["#1045", "Oct 24", 236, 92, 12, 7.2, 23.8],
+  ["#1044", "Oct 23", 228, 98, 16, 7, 18],
+  ["#1043", "Oct 23", 288, 120, 14, 8.6, 23.4],
+  ["#1042", "Oct 22", 182, 78, 14, 5.6, 20.4],
+  ["#1041", "Oct 22", 342, 132, 16, 10.2, 25.8],
+  ["#1040", "Oct 21", 196, 86, 12, 6, 21],
+  ["#1039", "Oct 21", 142, 148, 12, 4.4, 15.6],
+  ["#1038", "Oct 20", 262, 108, 14, 8, 22],
+  ["#1037", "Oct 20", 158, 72, 12, 5, 21],
+  ["#1036", "Oct 19", 298, 118, 16, 9, 23],
+  ["#1035", "Oct 19", 236, 98, 14, 7.2, 20.8],
+];
+const money = (v) => (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+document.getElementById("rows").innerHTML = ORDERS.map(([id, date, sales, cogs, ship, fees, ads]) => {
+  const profit = sales - cogs - ship - fees - ads, margin = (profit / sales) * 100;
+  const tone = profit < 0 ? "critical" : margin < 25 ? "warning" : "success";
+  return `<s-table-row>
+    <s-table-cell><s-link href="chat.html">${id}</s-link></s-table-cell>
+    <s-table-cell>${date}</s-table-cell>
+    <s-table-cell>${money(sales)}</s-table-cell>
+    <s-table-cell>${money(cogs)}</s-table-cell>
+    <s-table-cell>${money(ship)}</s-table-cell>
+    <s-table-cell>${money(fees)}</s-table-cell>
+    <s-table-cell>${money(ads)}</s-table-cell>
+    <s-table-cell><s-text type="strong" ${profit < 0 ? 'tone="critical"' : ""}>${money(profit)}</s-text></s-table-cell>
+    <s-table-cell><s-badge tone="${tone}">${margin.toFixed(1)}%</s-badge></s-table-cell>
+  </s-table-row>`;
+}).join("");
+</script>
+
+</body>
+</html>

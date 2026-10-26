@@ -1155,3 +1155,40 @@ body.no-fade::after { display: none; }
 .c-syncbanner[hidden] { display: none; }
 /* s-banner pone título y descripción en la misma línea si caben: así siempre van en dos líneas (como el de error) */
 .c-syncbanner s-banner > s-paragraph { display: block; min-inline-size: min(600px, 50vw); }
+
+/* ------------------------------------------------------------------ */
+/* Experiencia agéntica (ENG-2418)                                      */
+/* Solo lo que no existe como s-*: pasos del agente, barra de acciones  */
+/* sobre una respuesta, chips de prompt en el Home y barras de profit.  */
+/* ------------------------------------------------------------------ */
+/* Pasos del agente: "3 steps completed" desplegable (patrón de la app real) */
+.c-steps { display: grid; gap: 6px; }
+.c-steps__toggle { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 2px 6px 2px 2px; border: 0; border-radius: 8px; background: none; color: var(--c-text-secondary); font: 500 var(--c-fs-base)/20px var(--c-font); cursor: pointer; }
+.c-steps__toggle:hover { background: var(--c-surface-hover); color: var(--c-text); }
+.c-steps__toggle s-icon:last-child { transition: transform .15s; }
+.c-steps__toggle[aria-expanded="true"] s-icon:last-child { transform: rotate(180deg); }
+.c-steps__list { margin: 0 0 0 9px; padding: 2px 0 2px 16px; border-left: 1px solid var(--c-border); display: grid; gap: 6px; list-style: none; color: var(--c-text-secondary); }
+.c-steps__list[hidden] { display: none; }
+.c-steps__list li { display: flex; gap: 8px; align-items: baseline; }
+.c-steps__list code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--c-surface-subdued); padding: 0 4px; border-radius: 4px; color: var(--c-text); }
+
+/* Acciones sobre una respuesta: convertirla en digest, alerta o widget */
+.c-answer-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.c-msg { display: grid; gap: 12px; }
+.c-msg .c-chartcard { border: 1px solid var(--c-border); border-radius: 16px; padding: 14px 16px 10px; }
+
+/* Prompts sugeridos bajo el AskBar del Home */
+.c-hero__chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+
+/* Barras del gráfico de profit por orden */
+.c-bar { cursor: default; transition: opacity .1s; }
+.c-bar:hover { opacity: .8; }
+
+/* Vista previa del email del digest (simula el cuerpo del correo) */
+.c-mailpreview { border: 1px solid var(--c-border); border-radius: 16px; background: #fafafa; padding: 20px; display: grid; gap: 12px; }
+.c-mailpreview__head { display: flex; align-items: center; gap: 10px; }
+.c-mailpreview__head .c-prompt__logo { width: 28px; height: 28px; }
+.c-mailpreview__body { background: var(--c-surface); border-radius: 12px; padding: 16px; display: grid; gap: 10px; }
+
+/* Lista de entrada del Inbox: fila clicable con indicador de no leído */
+.c-unread { width: 8px; height: 8px; border-radius: 50%; background: var(--c-chart-1); flex: none; display: inline-block; }

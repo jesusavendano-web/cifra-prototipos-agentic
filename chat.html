@@ -10,27 +10,30 @@
 <script src="shared/cifra.js" defer></script>
 </head>
 <body class="no-fade">
-
 <!--
-  Pantalla: Chat de IA  (/app?c=<id>)  — conversación completa
+  Pantalla: Chat de IA  (/app?c=<id>) — versión agéntica (ENG-2418)
+  Qué cambia respecto al chat actual:
+    1. El agente muestra los pasos que dio (herramientas + supuestos), desplegables.
+    2. El profit es NETO y explica qué costos incluye; si faltan costos lo dice y lleva a cargarlos.
+    3. Cada respuesta se puede convertir en un digest programado, una alerta o un widget.
+    4. Profit por orden: el agente lo grafica y enlaza a la vista de órdenes.
   Estados (hash): (ninguno) conversación · #loading skeleton al abrir · #empty conversación nueva
-  Nativo → s-popover (historial), s-button (icon-only), s-paragraph, s-heading, s-unordered-list/s-list-item,
-           s-divider, s-text, s-clickable-chip (sugerencias), s-spinner
-  Custom → burbuja del usuario, tabla de markdown, barra de feedback, composer fijo, hilo con scroll
+  Nativo → s-popover (historial), s-button, s-paragraph, s-heading, s-text, s-banner (costos faltantes),
+           s-modal (programar digest), s-select, s-text-field, s-clickable-chip (sugerencias), s-spinner, s-icon
+  Custom → burbuja del usuario, pasos del agente, tabla de markdown, gráficas (SVG), barra de feedback, composer fijo
 -->
 <s-page inlineSize="large">
   <div class="c-chat" data-custom="ChatThread">
-
     <!-- Título de la conversación + historial -->
     <header class="c-chat__head">
       <s-clickable commandFor="chat-history" accessibilityLabel="Conversation history" padding="small-200" borderRadius="base">
-        <span class="c-row" style="gap:4px"><s-text type="strong" id="chat-title">Build a report on my top products</s-text><s-icon type="chevron-down" size="small"></s-icon></span>
+        <span class="c-row" style="gap:4px"><s-text type="strong" id="chat-title">Most profitable product, last 90 days</s-text><s-icon type="chevron-down" size="small"></s-icon></span>
       </s-clickable>
       <s-popover id="chat-history" maxInlineSize="320px">
         <s-box padding="small-200">
           <s-stack gap="small-100">
             <s-text color="subdued">Recent conversations</s-text>
-            <s-clickable href="chat.html" padding="small-200" borderRadius="base"><s-text type="strong">Build a report on my top products</s-text></s-clickable>
+            <s-clickable href="chat.html" padding="small-200" borderRadius="base"><s-text type="strong">Most profitable product, last 90 days</s-text></s-clickable>
             <s-clickable href="chat.html" padding="small-200" borderRadius="base"><s-text>Why did my margin drop last week?</s-text></s-clickable>
             <s-clickable href="chat.html" padding="small-200" borderRadius="base"><s-text>Which discount codes lose money?</s-text></s-clickable>
             <s-divider></s-divider>
@@ -49,8 +52,6 @@
       <div class="c-chat__col">
         <span class="c-skeleton" style="width:240px;height:36px;margin-left:auto;border-radius:12px"></span>
         <div class="c-chat__skel"><span class="c-skeleton"></span><span class="c-skeleton" style="width:92%"></span><span class="c-skeleton" style="width:80%"></span><span class="c-skeleton" style="width:50%"></span></div>
-        <span class="c-skeleton" style="width:240px;height:36px;margin-left:auto;border-radius:12px"></span>
-        <div class="c-chat__skel"><span class="c-skeleton"></span><span class="c-skeleton" style="width:92%"></span><span class="c-skeleton" style="width:80%"></span><span class="c-skeleton" style="width:50%"></span></div>
       </div>
     </div>
 
@@ -58,12 +59,13 @@
     <div class="c-chat__scroll c-chat__scroll--center" id="state-empty" hidden>
       <s-stack gap="base" alignItems="center">
         <img src="assets/img/cifra-icon-blue.svg" alt="" width="40" height="40">
-        <s-heading>Ask anything about your profit</s-heading>
-        <s-text color="subdued">Questions, reports, comparisons. I'll use your connected data.</s-text>
+        <s-heading>Ask, schedule or set an alert</s-heading>
+        <s-text color="subdued">I use your Shopify orders, product costs and connected channels (Meta, Klaviyo, TikTok) to answer.</s-text>
         <s-stack direction="inline" gap="small-200" justifyContent="center">
-          <s-clickable-chip data-suggest="Build a report on my top products">Build a report on my top products</s-clickable-chip>
-          <s-clickable-chip data-suggest="Why did my margin drop last week?">Why did my margin drop last week?</s-clickable-chip>
-          <s-clickable-chip data-suggest="Which discount codes lose money?">Which discount codes lose money?</s-clickable-chip>
+          <s-clickable-chip data-suggest="What was my most profitable product in the last 90 days?">Most profitable product, last 90 days</s-clickable-chip>
+          <s-clickable-chip data-suggest="Show me profit per order for my last 14 orders">Profit per order</s-clickable-chip>
+          <s-clickable-chip data-suggest="Alert me when sales drop more than normal">Alert me when sales drop</s-clickable-chip>
+          <s-clickable-chip data-suggest="Send me a profit summary every Monday">Weekly profit summary</s-clickable-chip>
         </s-stack>
       </s-stack>
     </div>
@@ -72,36 +74,104 @@
     <div class="c-chat__scroll" id="thread" tabindex="0" aria-label="Conversation">
       <div class="c-chat__col">
 
-        <div class="c-bubble">Build a report on my top products</div>
+        <!-- Turno 1: producto más rentable (con costos completos) -->
+        <div class="c-bubble">What was my most profitable product in the last 90 days?</div>
 
         <div class="c-msg" data-role="assistant">
-          <s-paragraph>Here is the performance report for your top products over the last 30 days (September 12, 2026 – October 11, 2026), ranked by <s-text type="strong">Net Sales</s-text>:</s-paragraph>
+          <div class="c-steps" data-custom="AgentSteps">
+            <button type="button" class="c-steps__toggle" aria-expanded="false"><s-icon type="check-circle" tone="success" size="small"></s-icon>4 steps completed<s-icon type="chevron-down" size="small"></s-icon></button>
+            <ol class="c-steps__list" hidden>
+              <li>Date range: <code>Jul 28 – Oct 25, 2026</code> (last 90 days)</li>
+              <li>Read net sales and cost of goods by product from Shopify</li>
+              <li>Allocated shipping, payment fees and Meta ad spend to each order</li>
+              <li>Checked cost coverage: 3 of 18 products have no cost of goods</li>
+            </ol>
+          </div>
+
+          <s-paragraph><s-text type="strong">The Complete Snowboard</s-text> was your most profitable product: <s-text type="strong">$2,104 net profit</s-text> on $4,733 net sales (44.5% net margin), after cost of goods, shipping, payment fees and ad spend.</s-paragraph>
 
           <div class="c-chat-table" data-custom="MarkdownTable">
             <table>
-              <thead><tr><th>Product Name</th><th>Net Sales</th><th>Gross Sales</th><th>Units Ordered</th><th>Cost of Goods</th><th>Return Rate</th></tr></thead>
+              <thead><tr><th>Product</th><th>Net sales</th><th>Cost of goods</th><th>Shipping</th><th>Fees</th><th>Ad spend</th><th>Net profit</th><th>Margin</th></tr></thead>
               <tbody>
-                <tr><th scope="row">Default Title</th><td>$4,732.83</td><td>$5,049.99</td><td>30</td><td>$1,712.73</td><td>10.0%</td></tr>
-                <tr><th scope="row">Cifra Margin Bleeder</th><td>$1,343.27</td><td>$1,343.27</td><td>5</td><td>$1,242.52</td><td>0.0%</td></tr>
-                <tr><th scope="row">Cifra Hero Cash Cow</th><td>$805.07</td><td>$805.07</td><td>4</td><td>$241.53</td><td>0.0%</td></tr>
-                <tr><th scope="row">Surge Batch</th><td>$802.25</td><td>$802.25</td><td>6</td><td>$441.23</td><td>0.0%</td></tr>
-                <tr><th scope="row">Cifra Inflation Spike Product</th><td>$671.41</td><td>$671.41</td><td>5</td><td>$288.51</td><td>0.0%</td></tr>
-                <tr><th scope="row">Normal Batch</th><td>$404.68</td><td>$404.68</td><td>3</td><td>$101.16</td><td>0.0%</td></tr>
-                <tr><th scope="row">Cifra Defective Batch Product</th><td>$0.62</td><td>$429.26</td><td>4</td><td>$160.98</td><td>100.0%</td></tr>
+                <tr><th scope="row">The Complete Snowboard</th><td>$4,732.83</td><td>$1,712.73</td><td>$412.00</td><td>$158.10</td><td>$346.00</td><td>$2,104.00</td><td>44.5%</td></tr>
+                <tr><th scope="row">Cifra Hero Cash Cow</th><td>$805.07</td><td>$241.53</td><td>$64.00</td><td>$26.90</td><td>$58.00</td><td>$414.64</td><td>51.5%</td></tr>
+                <tr><th scope="row">Surge Batch</th><td>$802.25</td><td>$441.23</td><td>$96.00</td><td>$26.80</td><td>$71.00</td><td>$167.22</td><td>20.8%</td></tr>
+                <tr><th scope="row">Normal Batch</th><td>$404.68</td><td>$101.16</td><td>$48.00</td><td>$13.50</td><td>$40.00</td><td>$202.02</td><td>49.9%</td></tr>
+                <tr><th scope="row">Cifra Margin Bleeder</th><td>$1,343.27</td><td>$1,242.52</td><td>$80.00</td><td>$44.90</td><td>$118.00</td><td>-$142.15</td><td>-10.6%</td></tr>
               </tbody>
             </table>
           </div>
 
-          <s-paragraph><s-text tone="neutral"><em>(Note: An additional $745.80 in net sales was recorded under adjustments/orders without an associated product title).</em></s-text></s-paragraph>
-          <s-divider></s-divider>
-          <s-heading>Highlights</s-heading>
-          <s-unordered-list>
-            <s-list-item><s-text type="strong">Top Revenue Driver: Default Title</s-text> generated the highest sales ($4,732.83 net sales across 30 units).</s-list-item>
-            <s-list-item><s-text type="strong">High Margin Performer: Cifra Hero Cash Cow</s-text> brought in $805.07 on a $241.53 COGS (~70% gross margin).</s-list-item>
-            <s-list-item><s-text type="strong">Return Alert: Cifra Defective Batch Product</s-text> had a 100% return rate ($429.26 gross sales reduced to $0.62 net sales).</s-list-item>
-          </s-unordered-list>
-          <s-paragraph>Your store also has a built-in <s-text type="strong">Top Products</s-text> template tracking these metrics. If you would like to save a custom report with specific filters, a different date range, or additional metrics (such as gross profit or discount rates), let me know!</s-paragraph>
+          <s-banner tone="warning" heading="3 products have no cost of goods">
+            <s-paragraph>Snowboard Wax, Gift Card and Ski Wax Kit are counted with $0 cost, so their profit is overstated. They are 6% of your net sales.</s-paragraph>
+            <s-button slot="secondary-actions" href="settings-cost-products.html">Add missing costs</s-button>
+          </s-banner>
 
+          <div class="c-answer-actions" data-custom="AnswerActions">
+            <s-button icon="calendar" commandFor="digest-modal" command="--show">Send this every Monday</s-button>
+            <s-button icon="alert-circle" href="automation-new.html#alert">Alert me on changes</s-button>
+            <s-button icon="pin" variant="tertiary">Pin to dashboard</s-button>
+          </div>
+
+          <div class="c-feedback" data-custom="MessageFeedback">
+            <s-button variant="tertiary" icon="clipboard" accessibilityLabel="Copy"></s-button>
+            <s-button variant="tertiary" icon="thumbs-up" accessibilityLabel="Good response"></s-button>
+            <s-button variant="tertiary" icon="thumbs-down" accessibilityLabel="Bad response"></s-button>
+          </div>
+        </div>
+
+        <!-- Turno 2: la pregunta donde la IA actual se traba -->
+        <div class="c-bubble">What were its total costs?</div>
+
+        <div class="c-msg" data-role="assistant">
+          <div class="c-steps" data-custom="AgentSteps">
+            <button type="button" class="c-steps__toggle" aria-expanded="false"><s-icon type="check-circle" tone="success" size="small"></s-icon>2 steps completed<s-icon type="chevron-down" size="small"></s-icon></button>
+            <ol class="c-steps__list" hidden>
+              <li>Reused the product and date range from your last question</li>
+              <li>Summed every cost allocated to its 30 units across 26 orders</li>
+            </ol>
+          </div>
+          <s-paragraph>The Complete Snowboard cost you <s-text type="strong">$2,628.83</s-text> in the last 90 days. Cost of goods is most of it:</s-paragraph>
+          <div class="c-chartcard" data-custom="Chart">
+            <span data-donut='[["Cost of goods",1712.73],["Shipping",412],["Ad spend (Meta)",346],["Payment fees",158.1]]' data-prefix="$"></span>
+          </div>
+          <s-paragraph>Shipping is <s-text type="strong">15.7%</s-text> of its costs, versus 9% on the rest of your catalog. Most of that comes from 7 orders shipped to Canada.</s-paragraph>
+          <s-stack direction="inline" gap="small-200">
+            <s-clickable-chip data-suggest="Show me profit per order for this product">Profit per order for this product</s-clickable-chip>
+            <s-clickable-chip data-suggest="How much would I save with a $15 shipping rate to Canada?">Simulate a Canada shipping rate</s-clickable-chip>
+          </s-stack>
+          <div class="c-feedback" data-custom="MessageFeedback">
+            <s-button variant="tertiary" icon="clipboard" accessibilityLabel="Copy"></s-button>
+            <s-button variant="tertiary" icon="thumbs-up" accessibilityLabel="Good response"></s-button>
+            <s-button variant="tertiary" icon="thumbs-down" accessibilityLabel="Bad response"></s-button>
+          </div>
+        </div>
+
+        <!-- Turno 3: profit por orden (hoy la IA responde que no tiene esa dimensión) -->
+        <div class="c-bubble">Show me profit per order for my last 14 orders</div>
+
+        <div class="c-msg" data-role="assistant">
+          <div class="c-steps" data-custom="AgentSteps">
+            <button type="button" class="c-steps__toggle" aria-expanded="false"><s-icon type="check-circle" tone="success" size="small"></s-icon>3 steps completed<s-icon type="chevron-down" size="small"></s-icon></button>
+            <ol class="c-steps__list" hidden>
+              <li>Loaded the last 14 orders (<code>#1035 – #1048</code>)</li>
+              <li>Calculated each order's costs: items, shipping, payment fee, discounts and attributed ad spend</li>
+              <li>Flagged orders with negative profit</li>
+            </ol>
+          </div>
+          <s-paragraph>Your last 14 orders made <s-text type="strong">$1,182 net profit</s-text> ($84 per order on average). <s-text type="strong">2 orders lost money</s-text>:</s-paragraph>
+          <div class="c-chartcard" data-custom="Chart">
+            <span data-bars='[["#1035",96],["#1036",132],["#1037",48],["#1038",110],["#1039",-38],["#1040",71],["#1041",158],["#1042",64],["#1043",122],["#1044",89],["#1045",101],["#1046",77],["#1047",-61],["#1048",213]]' data-prefix="$" data-title="Net profit per order"></span>
+          </div>
+          <s-unordered-list>
+            <s-list-item><s-text type="strong">#1047 (-$61):</s-text> the WELCOME20 discount plus free shipping on a $79 order.</s-list-item>
+            <s-list-item><s-text type="strong">#1039 (-$38):</s-text> Cifra Margin Bleeder sold below its cost of goods.</s-list-item>
+          </s-unordered-list>
+          <div class="c-answer-actions" data-custom="AnswerActions">
+            <s-button icon="view" href="orders-profit.html">Open profit per order</s-button>
+            <s-button icon="alert-circle" href="automation-new.html#alert">Alert me when an order loses money</s-button>
+          </div>
           <div class="c-feedback" data-custom="MessageFeedback">
             <s-button variant="tertiary" icon="clipboard" accessibilityLabel="Copy"></s-button>
             <s-button variant="tertiary" icon="thumbs-up" accessibilityLabel="Good response"></s-button>
@@ -115,11 +185,39 @@
     <!-- Composer fijo -->
     <form class="c-composer" id="composer" onsubmit="return false" data-custom="ChatComposer">
       <span class="c-prompt__logo" aria-hidden="true">C</span>
-      <input type="text" id="composer-input" placeholder="Ask anything about your profit" aria-label="Ask Cifra" autocomplete="off">
+      <input type="text" id="composer-input" placeholder="Ask, schedule a summary or set an alert" aria-label="Ask Cifra" autocomplete="off">
       <button type="button" class="c-ask__btn" aria-label="Attach"><s-icon type="plus"></s-icon></button>
       <button type="submit" class="c-ask__send" aria-label="Send" id="composer-send" disabled><s-icon type="arrow-up"></s-icon></button>
     </form>
   </div>
+
+  <!-- Modal: convertir la respuesta en un digest programado (prellenado por el agente) -->
+  <s-modal id="digest-modal" heading="Schedule this answer">
+    <s-stack gap="base">
+      <s-paragraph>Every week Cifra will run this question again with fresh data and send you the answer.</s-paragraph>
+      <s-text-field label="Name" value="Most profitable products"></s-text-field>
+      <s-text-area label="What to send" rows="2" value="My most profitable products of the last 7 days, net of all costs. Flag any product with negative margin."></s-text-area>
+      <s-grid gridTemplateColumns="1fr 1fr" gap="base">
+        <s-select label="Frequency">
+          <s-option value="daily">Every day</s-option>
+          <s-option value="weekly" selected>Every Monday</s-option>
+          <s-option value="monthly">First day of the month</s-option>
+        </s-select>
+        <s-select label="Time">
+          <s-option value="8" selected>8:00 AM</s-option>
+          <s-option value="12">12:00 PM</s-option>
+          <s-option value="18">6:00 PM</s-option>
+        </s-select>
+      </s-grid>
+      <s-choice-list label="Send to" name="channel" multiple>
+        <s-choice value="inbox" selected>Cifra inbox</s-choice>
+        <s-choice value="email" selected>Email (jesus@getcifra.com)</s-choice>
+        <s-choice value="slack">Slack</s-choice>
+      </s-choice-list>
+    </s-stack>
+    <s-button slot="secondary-actions" commandFor="digest-modal" command="--hide">Cancel</s-button>
+    <s-button slot="primary-action" variant="primary" href="automations.html#created">Create digest</s-button>
+  </s-modal>
 </s-page>
 
 <script>
@@ -132,25 +230,28 @@ document.addEventListener("DOMContentLoaded", () => {
     $("state-loading").hidden = name !== "loading";
     $("state-empty").hidden = name !== "empty";
     thread.hidden = name !== "thread";
-    $("chat-title").textContent = name === "empty" ? "New conversation" : "Build a report on my top products";
+    $("chat-title").textContent = name === "empty" ? "New conversation" : "Most profitable product, last 90 days";
   };
   const hash = location.hash.slice(1);
   showState(hash === "empty" ? "empty" : hash === "loading" ? "loading" : "thread");
 
   input.addEventListener("input", () => { send.toggleAttribute("disabled", !input.value.trim()); });
 
+  // Respuestas de prototipo: las intenciones de alerta/digest se confirman con una tarjeta en lugar de texto libre.
+  const reply = (text) => {
+    if (/alert/i.test(text)) return '<s-paragraph>I can watch that for you. Review what I understood before I turn it on:</s-paragraph><div class="c-answer-actions"><s-button variant="primary" href="automation-new.html#alert">Review alert</s-button></div>';
+    if (/every|weekly|summary|monday/i.test(text)) return '<s-paragraph>Sure. I prepared a weekly digest with your net profit, top products and anything unusual.</s-paragraph><div class="c-answer-actions"><s-button variant="primary" href="automation-new.html">Review digest</s-button></div>';
+    return '<s-paragraph>This is a prototype reply: in the app, Cifra answers with your real data, shows the steps it took and lets you schedule or pin the answer.</s-paragraph>';
+  };
   const ask = (text) => {
     if (!text.trim()) return;
     if (thread.hidden) { col.innerHTML = ""; showState("thread"); $("chat-title").textContent = text; }
     const b = document.createElement("div"); b.className = "c-bubble"; b.textContent = text; col.append(b);
     const m = document.createElement("div"); m.className = "c-msg";
-    m.innerHTML = '<s-stack direction="inline" gap="small-200" alignItems="center"><s-spinner size="small"></s-spinner><s-text color="subdued">Thinking…</s-text></s-stack>';
+    m.innerHTML = '<s-stack direction="inline" gap="small-200" alignItems="center"><s-spinner size="small"></s-spinner><s-text color="subdued">Reading your orders and costs…</s-text></s-stack>';
     col.append(m); thread.scrollTop = thread.scrollHeight;
     input.value = ""; send.setAttribute("disabled", "");
-    setTimeout(() => {
-      m.innerHTML = '<s-paragraph>This is a prototype reply: in the app, this is where Cifra answers with your real data, tables and links to reports.</s-paragraph>';
-      thread.scrollTop = thread.scrollHeight;
-    }, 1400);
+    setTimeout(() => { m.innerHTML = reply(text); thread.scrollTop = thread.scrollHeight; }, 1400);
   };
   $("composer").addEventListener("submit", () => ask(input.value));
   send.addEventListener("click", () => ask(input.value));

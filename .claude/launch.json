@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "prototipos-agentic", "runtimeExecutable": "node", "runtimeArgs": ["serve.js"], "port": 4322, "env": { "PORT": "4322" } }
+  ]
+}

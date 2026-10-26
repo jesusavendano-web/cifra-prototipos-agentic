@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automations</title>
+<meta name="shopify-api-key" content="prototype">
+<script src="https://cdn.shopify.com/shopifycloud/polaris-2.0-rc.js"></script>
+<link rel="stylesheet" href="shared/cifra.css">
+<script src="shared/cifra.js" defer></script>
+</head>
+<body>
+
+<!--
+  Pantalla: Automations (/app/automations) — NUEVA (ENG-2418)
+  Reemplaza Reports + Schedules: todo lo que el agente hace por su cuenta vive aquí.
+    · Digest  = una pregunta que el agente vuelve a correr con datos frescos y envía (inbox / email / Slack).
+    · Alert   = una condición en lenguaje natural que el agente vigila ("ventas más bajas de lo normal").
+  Estados (hash): (ninguno) lista · #created banner de confirmación · #empty sin automatizaciones
+  Nativo → s-page (primary-action), s-banner, s-table, s-badge, s-switch, s-button, s-menu, s-empty-state, s-text
+  Custom → tabs All / Digests / Alerts
+-->
+<s-page heading="Automations" inlineSize="large">
+  <s-link slot="breadcrumb-actions" href="home.html">Home</s-link>
+  <s-button slot="primary-action" variant="primary" icon="plus" href="automation-new.html">New automation</s-button>
+
+  <s-stack gap="base">
+    <div id="created-banner" hidden>
+      <s-banner tone="success" heading="Digest created" dismissible>
+        <s-paragraph>"Most profitable products" will arrive every Monday at 8:00 AM in your inbox and by email.</s-paragraph>
+      </s-banner>
+    </div>
+
+    <div id="list">
+      <s-stack gap="base">
+        <div class="c-tabs" role="tablist" data-custom="Tabs">
+          <button class="c-tabs__tab" role="tab" aria-selected="true">All (5)</button>
+          <button class="c-tabs__tab" role="tab" aria-selected="false">Digests (3)</button>
+          <button class="c-tabs__tab" role="tab" aria-selected="false">Alerts (2)</button>
+        </div>
+
+        <s-section padding="none">
+          <s-table>
+            <s-table-header-row>
+              <s-table-header listSlot="primary">Name</s-table-header>
+              <s-table-header>Type</s-table-header>
+              <s-table-header>When</s-table-header>
+              <s-table-header>Sends to</s-table-header>
+              <s-table-header>Last run</s-table-header>
+              <s-table-header>Active</s-table-header>
+              <s-table-header></s-table-header>
+            </s-table-header-row>
+            <s-table-body>
+              <s-table-row>
+                <s-table-cell><s-stack gap="none"><s-link href="automation-new.html">Weekly profit summary</s-link><s-text color="subdued">Net profit, top products and anything unusual</s-text></s-stack></s-table-cell>
+                <s-table-cell><s-badge tone="info" icon="calendar">Digest</s-badge></s-table-cell>
+                <s-table-cell>Mondays, 8:00 AM</s-table-cell>
+                <s-table-cell>Inbox, email</s-table-cell>
+                <s-table-cell>Oct 26, delivered</s-table-cell>
+                <s-table-cell><s-switch label="Active" labelAccessibilityVisibility="exclusive" checked></s-switch></s-table-cell>
+                <s-table-cell><s-button variant="tertiary" icon="view" href="inbox.html" accessibilityLabel="See last delivery"></s-button></s-table-cell>
+              </s-table-row>
+              <s-table-row>
+                <s-table-cell><s-stack gap="none"><s-link href="automation-new.html#alert">Sales drop more than normal</s-link><s-text color="subdued">Hourly sales below the usual range for that weekday and hour</s-text></s-stack></s-table-cell>
+                <s-table-cell><s-badge tone="warning" icon="alert-circle">Alert</s-badge></s-table-cell>
+                <s-table-cell>Checked every hour</s-table-cell>
+                <s-table-cell>Inbox, email</s-table-cell>
+                <s-table-cell>Oct 22, triggered</s-table-cell>
+                <s-table-cell><s-switch label="Active" labelAccessibilityVisibility="exclusive" checked></s-switch></s-table-cell>
+                <s-table-cell><s-button variant="tertiary" icon="view" href="inbox.html" accessibilityLabel="See last trigger"></s-button></s-table-cell>
+              </s-table-row>
+              <s-table-row>
+                <s-table-cell><s-stack gap="none"><s-link href="automation-new.html#alert">Order loses money</s-link><s-text color="subdued">Any order with negative net profit</s-text></s-stack></s-table-cell>
+                <s-table-cell><s-badge tone="warning" icon="alert-circle">Alert</s-badge></s-table-cell>
+                <s-table-cell>On every new order</s-table-cell>
+                <s-table-cell>Slack #ops</s-table-cell>
+                <s-table-cell>Oct 25, triggered</s-table-cell>
+                <s-table-cell><s-switch label="Active" labelAccessibilityVisibility="exclusive" checked></s-switch></s-table-cell>
+                <s-table-cell><s-button variant="tertiary" icon="view" href="inbox.html" accessibilityLabel="See last trigger"></s-button></s-table-cell>
+              </s-table-row>
+              <s-table-row>
+                <s-table-cell><s-stack gap="none"><s-link href="automation-new.html">Meta ads profitability</s-link><s-text color="subdued">ROAS and profit per campaign, last 7 days</s-text></s-stack></s-table-cell>
+                <s-table-cell><s-badge tone="info" icon="calendar">Digest</s-badge></s-table-cell>
+                <s-table-cell>Fridays, 5:00 PM</s-table-cell>
+                <s-table-cell>Email</s-table-cell>
+                <s-table-cell>Oct 23, delivered</s-table-cell>
+                <s-table-cell><s-switch label="Active" labelAccessibilityVisibility="exclusive" checked></s-switch></s-table-cell>
+                <s-table-cell><s-button variant="tertiary" icon="view" href="inbox.html" accessibilityLabel="See last delivery"></s-button></s-table-cell>
+              </s-table-row>
+              <s-table-row>
+                <s-table-cell><s-stack gap="none"><s-link href="automation-new.html">Monthly P&amp;L</s-link><s-text color="subdued">Profit &amp; Loss dashboard as a PDF</s-text></s-stack></s-table-cell>
+                <s-table-cell><s-badge tone="info" icon="calendar">Digest</s-badge></s-table-cell>
+                <s-table-cell>1st of the month</s-table-cell>
+                <s-table-cell>Email (3)</s-table-cell>
+                <s-table-cell>Oct 1, delivered</s-table-cell>
+                <s-table-cell><s-switch label="Active" labelAccessibilityVisibility="exclusive"></s-switch></s-table-cell>
+                <s-table-cell><s-button variant="tertiary" icon="view" href="inbox.html" accessibilityLabel="See last delivery"></s-button></s-table-cell>
+              </s-table-row>
+            </s-table-body>
+          </s-table>
+        </s-section>
+
+        <s-text color="subdued">Tip: you can also create automations from any answer in the chat ("Send this every Monday", "Alert me on changes").</s-text>
+      </s-stack>
+    </div>
+
+    <!-- Estado vacío: automations.html#empty -->
+    <div id="empty" hidden>
+      <s-section>
+        <s-empty-state heading="Let Cifra work while you're away">
+          <s-icon slot="graphic" type="clock"></s-icon>
+          <s-text slot="subheading">Describe what you want to know every week, or what you want Cifra to watch for. It will send it to your inbox, email or Slack.</s-text>
+          <s-button slot="primary-action" variant="primary" href="automation-new.html">Create a digest</s-button>
+          <s-button slot="secondary-actions" href="automation-new.html#alert">Create an alert</s-button>
+        </s-empty-state>
+      </s-section>
+    </div>
+  </s-stack>
+</s-page>
+
+<script>
+const h = location.hash.slice(1);
+document.getElementById("created-banner").hidden = h !== "created";
+document.getElementById("list").hidden = h === "empty";
+document.getElementById("empty").hidden = h !== "empty";
+</script>
+
+</body>
+</html>

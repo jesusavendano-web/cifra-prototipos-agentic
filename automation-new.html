@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automations · New</title>
+<meta name="shopify-api-key" content="prototype">
+<script src="https://cdn.shopify.com/shopifycloud/polaris-2.0-rc.js"></script>
+<link rel="stylesheet" href="shared/cifra.css">
+<script src="shared/cifra.js" defer></script>
+</head>
+<body>
+
+<!--
+  Pantalla: Automations › New (/app/automations/new) — NUEVA (ENG-2418), reemplaza schedule.html
+  El usuario describe lo que quiere en sus palabras; el agente lo interpreta y muestra "What Cifra understood"
+  para que lo confirme antes de activarlo. Nada se activa sin esa confirmación.
+  Estados (hash): (ninguno) Digest · #alert Alerta ("alert me when sales drop more than normal")
+  Nativo → s-page, s-section, s-text-area, s-select, s-choice-list, s-switch, s-badge, s-banner, s-button, s-text, s-divider
+  Custom → segmented Digest | Alert, gráfica de "rango normal" (SVG), vista previa del correo
+-->
+<s-page heading="New automation" inlineSize="base">
+  <s-link slot="breadcrumb-actions" href="automations.html">Automations</s-link>
+  <s-button slot="primary-action" variant="primary" href="automations.html#created" id="save">Create digest</s-button>
+  <s-button slot="secondary-actions">Send test</s-button>
+
+  <s-stack gap="base">
+
+    <s-section heading="Describe it">
+      <s-stack gap="base">
+        <div class="c-segmented" data-custom="SegmentedControl" id="kind">
+          <button type="button" aria-pressed="true" data-value="digest">Digest</button>
+          <button type="button" aria-pressed="false" data-value="alert">Alert</button>
+        </div>
+        <div data-panel-group="kind" data-panel="digest">
+          <s-text-area label="What do you want to know?" rows="3" value="Every Monday, tell me how much profit I made last week, my top products and anything unusual I should look at." details="Write it like you'd ask a teammate. Cifra will run it again with fresh data every time."></s-text-area>
+        </div>
+        <div data-panel-group="kind" data-panel="alert" hidden>
+          <s-text-area label="What should Cifra watch for?" rows="3" value="Alert me when sales drop more than normal." details="Cifra learns what &quot;normal&quot; means from your history, so you don't need to set a number."></s-text-area>
+        </div>
+        <s-stack direction="inline" gap="small-200">
+          <s-button icon="refresh">Interpret again</s-button>
+        </s-stack>
+      </s-stack>
+    </s-section>
+
+    <!-- Digest: interpretación -->
+    <div data-panel-group="kind" data-panel="digest">
+      <s-stack gap="base">
+        <s-section heading="What Cifra understood">
+          <s-stack gap="base">
+            <s-stack gap="small-200">
+              <s-text type="strong">Each digest will include</s-text>
+              <s-unordered-list>
+                <s-list-item>Net profit for the last 7 days, compared with the previous 7</s-list-item>
+                <s-list-item>Top 5 products by net profit, and any product with negative margin</s-list-item>
+                <s-list-item>Up to 3 unusual changes in sales, costs or ad performance</s-list-item>
+              </s-unordered-list>
+            </s-stack>
+            <s-grid gridTemplateColumns="1fr 1fr" gap="base">
+              <s-select label="Frequency">
+                <s-option value="daily">Every day</s-option>
+                <s-option value="weekly" selected>Every Monday</s-option>
+                <s-option value="monthly">First day of the month</s-option>
+              </s-select>
+              <s-select label="Time">
+                <s-option value="8" selected>8:00 AM</s-option>
+                <s-option value="12">12:00 PM</s-option>
+                <s-option value="18">6:00 PM</s-option>
+              </s-select>
+            </s-grid>
+            <s-text color="subdued">Uses your store's time zone (UTC-04:00). Next digest: Monday, November 2 at 8:00 AM.</s-text>
+          </s-stack>
+        </s-section>
+
+        <s-section heading="Preview">
+          <div class="c-mailpreview" data-custom="MailPreview">
+            <div class="c-mailpreview__head"><span class="c-prompt__logo" aria-hidden="true">C</span><s-stack gap="none"><s-text type="strong">Your week in profit · Oct 19 – 25</s-text><s-text color="subdued">Cifra · to jesus@getcifra.com</s-text></s-stack></div>
+            <div class="c-mailpreview__body">
+              <s-paragraph>You made <s-text type="strong">$3,184 net profit</s-text> last week, <s-text tone="success">up 12%</s-text> from the week before, on 61 orders.</s-paragraph>
+              <s-paragraph><s-text type="strong">Top products:</s-text> The Complete Snowboard ($812), Cifra Hero Cash Cow ($164), Normal Batch ($88).</s-paragraph>
+              <s-paragraph><s-text type="strong">Look at this:</s-text> Cifra Margin Bleeder sold 4 units below cost (-$51). Meta ROAS dropped to 1.9 after Friday's campaign.</s-paragraph>
+              <s-stack direction="inline"><s-button>Ask Cifra about this</s-button></s-stack>
+            </div>
+          </div>
+        </s-section>
+      </s-stack>
+    </div>
+
+    <!-- Alerta: interpretación -->
+    <div data-panel-group="kind" data-panel="alert" hidden>
+      <s-stack gap="base">
+        <s-section heading="What Cifra understood">
+          <s-stack gap="base">
+            <s-grid gridTemplateColumns="140px 1fr" gap="small">
+              <s-text color="subdued">Metric</s-text><s-text>Net sales, per hour</s-text>
+              <s-text color="subdued">Normal</s-text><s-text>The usual range for that weekday and hour, based on your last 8 weeks</s-text>
+              <s-text color="subdued">Alert when</s-text><s-text>Sales stay below the normal range for 2 hours in a row</s-text>
+              <s-text color="subdued">Ignore</s-text><s-text>Hours where you normally get fewer than 3 orders (nights)</s-text>
+            </s-grid>
+            <div data-custom="Chart">
+              <s-text type="strong">Last 7 days vs. normal</s-text>
+              <span data-line="rand:41:42:120:45" data-prev="rand:42:42:130:20" data-labels='["Oct 19","Oct 21","Oct 23","Oct 25"]' data-prefix="$" data-label="Net sales" data-start="2026-10-19" data-prev-start="2026-10-19"></span>
+              <div class="c-legend"><span><span class="c-legend__swatch" style="background:var(--c-chart-1)"></span>Net sales</span><span><span class="c-legend__dash"></span>Normal for that hour</span></div>
+            </div>
+            <s-banner tone="info">
+              <s-paragraph>With these settings this alert would have triggered <s-text type="strong">2 times</s-text> in the last 30 days (Oct 4 and Oct 22).</s-paragraph>
+            </s-banner>
+            <s-select label="Sensitivity" details="Higher sensitivity catches smaller drops but alerts more often.">
+              <s-option value="low">Low: only big drops (about once a month)</s-option>
+              <s-option value="medium" selected>Medium: about twice a month</s-option>
+              <s-option value="high">High: any drop out of the normal range</s-option>
+            </s-select>
+          </s-stack>
+        </s-section>
+
+        <s-section heading="Preview">
+          <s-section>
+            <s-stack gap="small">
+              <s-stack direction="inline" gap="small-200" alignItems="center"><s-badge tone="warning" icon="alert-circle">Alert</s-badge><s-text color="subdued">Today, 3:00 PM</s-text></s-stack>
+              <s-heading>Sales are lower than normal</s-heading>
+              <s-paragraph>Since 1:00 PM you made $214, about 45% below a normal Thursday afternoon. Traffic is normal, but checkout conversion dropped from 3.1% to 1.4%.</s-paragraph>
+              <s-stack direction="inline" gap="small-200"><s-button>Ask why</s-button><s-button variant="tertiary">Snooze for today</s-button></s-stack>
+            </s-stack>
+          </s-section>
+        </s-section>
+      </s-stack>
+    </div>
+
+    <s-section heading="Where to send it">
+      <s-stack gap="base">
+        <s-choice-list label="Channels" name="channels" multiple>
+          <s-choice value="inbox" selected>Cifra inbox</s-choice>
+          <s-choice value="email" selected>Email (jesus@getcifra.com)</s-choice>
+          <s-choice value="slack">Slack</s-choice>
+        </s-choice-list>
+        <s-switch label="Don't send between 10:00 PM and 7:00 AM" checked></s-switch>
+      </s-stack>
+    </s-section>
+
+  </s-stack>
+</s-page>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const kind = document.getElementById("kind"), save = document.getElementById("save");
+  const set = (v) => {
+    kind.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.value === v)));
+    document.querySelectorAll('[data-panel-group="kind"]').forEach((p) => { p.hidden = p.dataset.panel !== v; });
+    save.textContent = v === "alert" ? "Turn on alert" : "Create digest";
+  };
+  kind.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) set(b.dataset.value); });
+  set(location.hash === "#alert" ? "alert" : "digest");
+});
+</script>
+
+</body>
+</html>
