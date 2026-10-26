@@ -104,38 +104,32 @@
       </div>
     </div>
 
-    <!-- Briefing del agente (reemplaza la card de Insights): carrusel de cards con ilustración, una por hallazgo -->
+    <!-- Briefing del agente (reemplaza la card de Insights): una card de Home por hallazgo, con ilustración -->
     <div class="c-home__section">
-      <div class="c-row c-row--between c-section-label">
-        <span>Today's briefing</span>
-        <span class="c-row" style="gap:8px"><span>Written by Cifra at 8:00 AM</span><span class="c-carousel__count" id="brief-count">1 of 3</span><s-button icon="chevron-left" variant="tertiary" accessibilityLabel="Previous" id="brief-prev"></s-button><s-button icon="chevron-right" variant="tertiary" accessibilityLabel="Next" id="brief-next"></s-button></span>
+      <div class="c-row c-row--between c-section-label"><span>Today's briefing</span><span>Written by Cifra at 8:00 AM</span></div>
+      <div class="c-home__grid c-home__grid--3">
+        <article class="c-homecard" data-custom="HomeCard">
+          <div class="c-row" style="gap:8px;flex-wrap:wrap"><s-badge tone="critical" icon="alert-triangle">Margin drag</s-badge><s-text color="subdued">Yesterday</s-text></div>
+          <h3 class="c-homecard__title">Order #1047 lost $61</h3>
+          <s-paragraph>WELCOME20 plus free shipping turned a $79 cart into a loss. It's the 3rd order like this in October.</s-paragraph>
+          <div class="c-homecard__actions"><a class="c-homebtn" href="chat.html">Ask how to fix it</a></div>
+          <img class="c-homecard__img c-homecard__img--brief" style="width:145px;right:12px;bottom:8px" src="assets/img/margin-drag.webp" alt="">
+        </article>
+        <article class="c-homecard" data-custom="HomeCard">
+          <div class="c-row" style="gap:8px;flex-wrap:wrap"><s-badge tone="warning" icon="alert-circle">Sudden change</s-badge><s-text color="subdued">Since Friday</s-text></div>
+          <h3 class="c-homecard__title">Meta ROAS fell to 1.9</h3>
+          <s-paragraph>Friday's new campaign spent $212 and brought 3 orders. The rest of your campaigns kept a 3.4 ROAS.</s-paragraph>
+          <div class="c-homecard__actions"><a class="c-homebtn" href="chat.html">Ask why</a></div>
+          <img class="c-homecard__img c-homecard__img--brief" style="width:186px;right:-12px;bottom:-16px" src="assets/img/sudden-change.webp" alt="">
+        </article>
+        <article class="c-homecard" data-custom="HomeCard">
+          <div class="c-row" style="gap:8px;flex-wrap:wrap"><s-badge tone="info" icon="info">Top performer</s-badge><s-text color="subdued">Last 30 days</s-text></div>
+          <h3 class="c-homecard__title">The Complete Snowboard</h3>
+          <s-paragraph>It keeps a 44.5% net margin after every cost: $2,104 net profit on 30 units.</s-paragraph>
+          <div class="c-homecard__actions"><a class="c-homebtn" href="chat.html">Ask a follow-up</a></div>
+          <img class="c-homecard__img c-homecard__img--brief" style="width:116px;right:22px;bottom:8px" src="assets/img/top-performer.webp" alt="">
+        </article>
       </div>
-      <div class="c-carousel" data-custom="Carousel">
-        <div class="c-carousel__track" id="brief-track">
-          <article class="c-homecard c-homecard--insight c-carousel__slide" data-custom="HomeCard">
-            <div class="c-row" style="gap:8px"><s-badge tone="critical" icon="alert-triangle">Margin drag</s-badge><s-text color="subdued">Yesterday · Order #1047</s-text></div>
-            <h3 class="c-homecard__title">Order #1047 lost $61</h3>
-            <s-paragraph>The WELCOME20 discount plus free shipping turned a $79 cart into a loss. It's the 3rd order like this in October (-$148 in total). Yesterday you made $412 net profit on 9 orders, 18% below a normal Sunday.</s-paragraph>
-            <div class="c-homecard__actions"><a class="c-homebtn" href="chat.html">Ask how to fix it</a> <a class="c-homebtn" href="orders-profit.html">See order</a></div>
-            <img class="c-homecard__img" style="width:150px;right:24px;bottom:16px" src="assets/img/margin-drag.webp" alt="">
-          </article>
-          <article class="c-homecard c-homecard--insight c-carousel__slide" data-custom="HomeCard">
-            <div class="c-row" style="gap:8px"><s-badge tone="warning" icon="alert-circle">Sudden change</s-badge><s-text color="subdued">Since Friday · Meta Ads</s-text></div>
-            <h3 class="c-homecard__title">Meta ROAS fell from 3.1 to 1.9</h3>
-            <s-paragraph>Friday's new campaign "Broad – Snowboards" spent $212 and brought 3 orders. The rest of your campaigns kept a 3.4 ROAS.</s-paragraph>
-            <div class="c-homecard__actions"><a class="c-homebtn" href="chat.html">Ask why</a> <a class="c-homebtn" href="automation-new.html#alert">Watch this campaign</a></div>
-            <img class="c-homecard__img" style="width:150px;right:24px;bottom:16px" src="assets/img/sudden-change.webp" alt="">
-          </article>
-          <article class="c-homecard c-homecard--insight c-carousel__slide" data-custom="HomeCard">
-            <div class="c-row" style="gap:8px"><s-badge tone="info" icon="info">Top performer</s-badge><s-text color="subdued">Last 30 days · Product</s-text></div>
-            <h3 class="c-homecard__title">The Complete Snowboard keeps a 44.5% net margin</h3>
-            <s-paragraph>It made $2,104 net profit on 30 units after every cost: goods, shipping, fees and ads. It's your most profitable product.</s-paragraph>
-            <div class="c-homecard__actions"><a class="c-homebtn" href="chat.html">Ask a follow-up</a></div>
-            <img class="c-homecard__img" style="width:136px;right:0;bottom:-12px" src="assets/img/top-performer.webp" alt="">
-          </article>
-        </div>
-      </div>
-      <div class="c-carousel__dots" id="brief-dots" aria-hidden="true"><i class="is-on"></i><i></i><i></i></div>
     </div>
 
     <!-- Automatizaciones activas: mismas cards del Home, con ilustración -->
@@ -226,14 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
   t.addEventListener("input", () => { b.disabled = !t.value.trim(); });
   t.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (t.value.trim()) location.href = "chat.html"; } });
   b.addEventListener("click", () => { location.href = "chat.html"; });
-  // Carrusel del briefing: scroll-snap + flechas + contador
-  const track = document.getElementById("brief-track"), n = track.children.length;
-  const stepW = () => track.children[1].offsetLeft - track.children[0].offsetLeft;
-  const sync = () => { const i = Math.round(track.scrollLeft / stepW()); document.getElementById("brief-count").textContent = (i + 1) + " of " + n; document.querySelectorAll("#brief-dots i").forEach((d, k) => d.classList.toggle("is-on", k === i)); };
-  track.addEventListener("scroll", () => requestAnimationFrame(sync));
-  track.addEventListener("scrollend", sync);
-  document.getElementById("brief-prev").addEventListener("click", () => track.scrollBy({ left: -stepW(), behavior: "smooth" }));
-  document.getElementById("brief-next").addEventListener("click", () => track.scrollBy({ left: stepW(), behavior: "smooth" }));
   document.querySelectorAll("[data-ask]").forEach((c) => c.addEventListener("click", () => {
     location.href = /alert/i.test(c.dataset.ask) ? "automation-new.html#alert" : /every|summary/i.test(c.dataset.ask) ? "automation-new.html" : "chat.html";
   }));

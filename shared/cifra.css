@@ -1314,3 +1314,5 @@ body.has-admin .c-admin.is-collapsed ~ ::after { left: 4px; }
 .c-pvchat__composer { display: flex; align-items: center; gap: 10px; margin: 8px 14px 14px; padding: 8px 8px 8px 12px; border: 1px solid var(--c-border); border-radius: 14px; color: #8a8a8a; font-size: 13px; }
 .c-pvchat__composer span:nth-child(2) { flex: 1; }
 .c-pvchat__send { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #f1f1f1; }
+/* Briefing del Home: ancho base; cada ilustración se ajusta inline para que el dibujo visible mida ~140px (los webp traen márgenes distintos) */
+.c-homecard .c-homecard__img--brief { width: 140px; right: 14px; bottom: 14px; }
